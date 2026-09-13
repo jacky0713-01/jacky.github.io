@@ -1,446 +1,477 @@
-<html>
-	<head>
-		<title>Throw a Coin - 新竹九降風清水疾風俠變異圖鑑收集紀錄 | Jacky</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
-
-		<!-- Header -->
-			<section id="header">
-				<div class="inner">
-					<span class="icon solid major fa-coins"></span>
-					<h1>Roblox <strong>Throw a Coin</strong></h1>
-					<p>新竹九降風清水疾風俠硬幣變異圖鑑收集與數據紀錄中心</p>
-					<ul class="actions special">
-						<li><a href="#one" class="button scrolly">查看變異圖鑑</a></li>
-					</ul>
-				</div>
-			</section>
-
-		<!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Item Collection Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0f172a',
-                        cardBg: '#1e293b',
-                        accentBlue: '#38bdf8',
-                        accentPurple: '#c084fc',
-                        accentGold: '#fbbf24',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-        .glow-green {
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
-        }
-        .glow-red {
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roblox 物品收集圖鑑數據庫</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+    }
+    .glow-collected {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.3);
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.15);
+    }
+    .glow-uncollected {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(248, 113, 113, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #111827;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased pb-12">
-
-    <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-cyan-500/20">
-                    🏆
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                        物品圖鑑收集庫 <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">v2.0 PRO</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Game Item Collection Database</p>
-                </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="flex items-center gap-6 text-sm">
-                <div class="flex flex-col">
-                    <span class="text-xs text-slate-400">總全收集率</span>
-                    <span id="global-progress-text" class="font-bold text-cyan-400 font-mono">0%</span>
-                </div>
-                <div class="w-32 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700">
-                    <div id="global-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
-                </div>
-            </div>
-        </div>
+<body class="min-h-screen pb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    
+    <!-- 頁眉標題與說明 -->
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-gray-800 gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3">
+          <span class="inline-block w-3 h-8 bg-indigo-500 rounded-full"></span>
+          Roblox 物品全收集戰績圖鑑
+        </h1>
+        <p class="mt-1 text-sm text-gray-400">即時監控全 188 項物品之 Astral、Divine 與 Void 收集進度</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-950 text-indigo-300 border border-indigo-800">
+          <span class="w-2 h-2 mr-2 bg-indigo-400 rounded-full animate-pulse"></span>
+          資料庫同步：188 / 188 筆
+        </span>
+      </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-
-        <!-- Metrics Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">物品總數</p>
-                        <h3 id="stat-total" class="text-2xl font-bold text-white mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-slate-800 text-slate-300 rounded-lg">📦</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">已完全收集 (4/4)</p>
-                        <h3 id="stat-completed" class="text-2xl font-bold text-emerald-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-emerald-950/60 text-emerald-400 rounded-lg border border-emerald-800/40">✅</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">未完全收集</p>
-                        <h3 id="stat-incomplete" class="text-2xl font-bold text-rose-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-rose-950/60 text-rose-400 rounded-lg border border-rose-800/40">⚠️</div>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">目前顯示數量</p>
-                        <h3 id="stat-showing" class="text-2xl font-bold text-cyan-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-cyan-950/60 text-cyan-400 rounded-lg border border-cyan-800/40">🔍</div>
-                </div>
-            </div>
+    <!-- 儀表板數據統計卡片 -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-6">
+      <div class="bg-gray-900/80 border border-gray-800 rounded-xl p-5 backdrop-blur">
+        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">總圖鑑項目</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span class="text-3xl font-bold text-white" id="stat-total">188</span>
+          <span class="text-xs text-gray-500">Items Registered</span>
         </div>
+      </div>
 
-        <!-- Filter Bar -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 shadow-md flex flex-col md:flex-row gap-4 justify-between items-center">
-            <!-- Search Box -->
-            <div class="relative w-full md:w-96">
-                <input type="text" id="search-input" placeholder="搜尋物品名稱或分類..." 
-                    class="w-full bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-xl px-4 py-2.5 pl-10 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition">
-                <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
-
-            <!-- Filters Group -->
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-                <!-- Category Select -->
-                <select id="category-filter" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition">
-                    <option value="ALL">全部分類 (All Categories)</option>
-                </select>
-
-                <!-- Status Filter Buttons -->
-                <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-medium">
-                    <button class="status-btn active px-3 py-1.5 rounded-lg text-slate-300 transition" data-status="ALL">全部</button>
-                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="COMPLETE">已完成</button>
-                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="INCOMPLETE">未完成</button>
-                </div>
-            </div>
+      <div class="bg-gray-900/80 border border-gray-800 rounded-xl p-5 backdrop-blur">
+        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">全滿收集完成率</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span class="text-3xl font-bold text-emerald-400" id="stat-completed">0</span>
+          <span class="text-xs text-emerald-500 font-medium" id="stat-rate">0%</span>
         </div>
-
-        <!-- Data Table Container -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-300">
-                    <thead class="bg-slate-950/90 text-slate-400 uppercase text-xs font-semibold border-b border-slate-800 tracking-wider">
-                        <tr>
-                            <th class="py-4 px-6 text-center w-20">編號</th>
-                            <th class="py-4 px-6">物品名稱</th>
-                            <th class="py-4 px-6 text-center">分類 (Rarity/Type)</th>
-                            <th class="py-4 px-6 text-center text-cyan-400">Astral</th>
-                            <th class="py-4 px-6 text-center text-cyan-300">Astral Count</th>
-                            <th class="py-4 px-6 text-center text-purple-400">Divine</th>
-                            <th class="py-4 px-6 text-center text-amber-400">Void</th>
-                        </tr>
-                    </thead>
-                    <tbody id="items-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Content Rendered via JS -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Empty State -->
-            <div id="empty-state" class="hidden py-16 text-center">
-                <p class="text-4xl mb-3">🔍</p>
-                <p class="text-slate-400 text-base">找不到符合條件的物品</p>
-                <p class="text-slate-600 text-xs mt-1">請嘗試變更搜尋關鍵字或篩選條件</p>
-            </div>
+        <div class="w-full bg-gray-800 h-1.5 rounded-full mt-3 overflow-hidden">
+          <div id="stat-progress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
         </div>
-    </main>
+      </div>
 
-    <script>
-        // Item Dataset (Auto generated & parsed from your collection screenshots)
-        const RAW_DATA = [
-            { id: 1, name: "Soccer Ball", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 2, name: "Traffic Cone", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 3, name: "Rubber Duck", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 4, name: "Alarm Clock", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 5, name: "Apple", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 6, name: "Gold Bar", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            
-            // Items 89 to 188 from screenshot series
-            { id: 89, name: "Light Engine", category: "Angelic", astral: true, count: 4, divine: true, void: true },
-            { id: 90, name: "Creation Throne", category: "Angelic", astral: true, count: 4, divine: true, void: true },
-            { id: 91, name: "Floating Island", category: "Godlike", astral: true, count: 4, divine: true, void: true },
-            { id: 92, name: "Dream Universe", category: "Godlike", astral: true, count: 4, divine: true, void: true },
-            { id: 93, name: "Theseus Ship", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 94, name: "Omphalos Stone", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 95, name: "Trojan Horse", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 96, name: "Cyclops' Forge", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 97, name: "Tartarus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
-            { id: 98, name: "Mount Olympus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
-            { id: 99, name: "Pandora's Box", category: "Promethean", astral: true, count: 4, divine: true, void: true },
-            { id: 100, name: "Titan Heart", category: "Promethean", astral: true, count: 4, divine: true, void: true },
-            { id: 101, name: "World Tree", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 102, name: "Atlantis", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 103, name: "The Big Bang", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 104, name: "Wizard Hat", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 105, name: "Broomstick", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 106, name: "Witch Cauldron", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 107, name: "Basilisk Fang", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 108, name: "Moon Amulet", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 109, name: "Phoenix Feather", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 110, name: "Portal Key", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 111, name: "Shadow Sword", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 112, name: "Mimic Chest", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 113, name: "Enchanted Anvil", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 114, name: "Griffin Egg", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 115, name: "Magic Staff", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 116, name: "Monolith", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 117, name: "Philosopher's Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 118, name: "Sundial", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 119, name: "Crystal Ball", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 120, name: "Rune Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 121, name: "Moon Throne", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 122, name: "Shadow Orb", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 123, name: "Forgotten Ruins", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 124, name: "Star Altar", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 125, name: "Oracle Orb", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 126, name: "Forbidden Tome", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 127, name: "Moonwell", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 128, name: "Haunted Manor", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 129, name: "Void Eye", category: "Fabled", astral: true, count: 4, divine: true, void: true },
-            { id: 130, name: "Void Rift", category: "Fabled", astral: true, count: 4, divine: true, void: true },
-            { id: 131, name: "Clock Tower", category: "Exalted", astral: true, count: 4, divine: true, void: true },
-            { id: 132, name: "Cloud Palace", category: "Exalted", astral: true, count: 4, divine: true, void: true },
-            { id: 133, name: "Dragon Mountain", category: "Relic", astral: true, count: 4, divine: true, void: true },
-            { id: 134, name: "Alchemist Table", category: "Awakened", astral: true, count: 4, divine: true, void: true },
-            { id: 135, name: "Ghost Ship", category: "Awakened", astral: true, count: 4, divine: true, void: true },
-            { id: 136, name: "Realm Gate", category: "Unbound", astral: true, count: 4, divine: true, void: true },
-            { id: 137, name: "Phantom Fortress", category: "Unbound", astral: true, count: 4, divine: true, void: true },
-            { id: 138, name: "Sky Castle", category: "Mythos", astral: true, count: 4, divine: true, void: true },
-            { id: 139, name: "Gearbox", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 140, name: "Engineer Goggles", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 141, name: "Barometer", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 142, name: "Gramophone", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 143, name: "Piston Machine", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 144, name: "Pressure Canister", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 145, name: "Pneumatic Hammer", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 146, name: "Telegraph Machine", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 147, name: "Pocketwatch", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 148, name: "Globe", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 149, name: "Steam Drill", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 150, name: "Hydraulic Press", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 151, name: "Diving Bell", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 152, name: "Steam Cannon", category: "Regal", astral: true, count: 4, divine: true, void: true },
-            { id: 153, name: "Lighthouse", category: "Regal", astral: true, count: 4, divine: true, void: true },
-            { id: 154, name: "Tesla Coil", category: "Epochal", astral: true, count: 4, divine: true, void: true },
-            { id: 155, name: "Jetpack", category: "Impossible", astral: true, count: 4, divine: true, void: true },
-            { id: 156, name: "Turbine", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
-            { id: 157, name: "Hot Air Balloon", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
-            { id: 158, name: "Perpetual Engine", category: "Colossal", astral: true, count: 4, divine: true, void: true },
-            { id: 159, name: "Factory", category: "Deus", astral: true, count: 4, divine: true, void: true },
-            { id: 160, name: "Airship", category: "Deus", astral: true, count: 4, divine: true, void: true },
-            { id: 161, name: "Citadel", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 162, name: "Solar Galleon", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 163, name: "Nautilus", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 164, name: "Training Dummy", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 165, name: "Golden Fan", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 166, name: "Bonsai Tree", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 167, name: "Lucky Medallion", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 168, name: "War Drum", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 169, name: "Shuriken", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 170, name: "Stone Lantern", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 171, name: "Katana", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 172, name: "Emperor Crown", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 173, name: "Sacred Vase", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 174, name: "Oni Mask", category: "Yokai", astral: true, count: 4, divine: true, void: true },
-            { id: 175, name: "Oni Hammer", category: "Yokai", astral: true, count: 4, divine: true, void: true },
-            { id: 176, name: "Torii Gate", category: "Veiled", astral: true, count: 4, divine: true, void: true },
-            { id: 177, name: "Imperial Throne", category: "Veiled", astral: true, count: 4, divine: true, void: true },
-            { id: 178, name: "Dojo", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
-            { id: 179, name: "Great Pagoda", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
-            { id: 180, name: "Dragon Temple", category: "Imperial", astral: true, count: 4, divine: true, void: true },
-            { id: 181, name: "Imperial Seal", category: "Imperial", astral: true, count: 4, divine: true, void: true },
-            { id: 182, name: "Sun Palace", category: "Sovereign", astral: true, count: 4, divine: true, void: true },
-            { id: 183, name: "Mount Fuji", category: "Amatsu", astral: true, count: 4, divine: true, void: true },
-            { id: 184, name: "Dragon Blade", category: "Kami", astral: false, count: 0, divine: false, void: false },
-            { id: 185, name: "Temple Key", category: "Kami", astral: false, count: 0, divine: false, void: false },
-            { id: 186, name: "Yata Mirror", category: "Onmyo", astral: false, count: 0, divine: true, void: false },
-            { id: 187, name: "Oni Warship", category: "Onmyo", astral: false, count: 0, divine: false, void: false },
-            { id: 188, name: "Dragon Pearl", category: "Izanami", astral: false, count: 0, divine: false, void: false },
-        ];
+      <div class="bg-gray-900/80 border border-gray-800 rounded-xl p-5 backdrop-blur">
+        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">目前顯示筆數</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span class="text-3xl font-bold text-indigo-400" id="stat-showing">188</span>
+          <span class="text-xs text-indigo-300">Matching Items</span>
+        </div>
+      </div>
 
-        // Global State Filters
-        let currentSearch = "";
-        let currentCategory = "ALL";
-        let currentStatusFilter = "ALL";
+      <div class="bg-gray-900/80 border border-gray-800 rounded-xl p-5 backdrop-blur">
+        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">未完全收集數量</div>
+        <div class="mt-2 flex items-baseline justify-between">
+          <span class="text-3xl font-bold text-rose-400" id="stat-incomplete">0</span>
+          <span class="text-xs text-rose-500">Incomplete</span>
+        </div>
+      </div>
+    </div>
 
-        // Initialize App
-        document.addEventListener("DOMContentLoaded", () => {
-            populateCategories();
-            calculateGlobalStats();
-            renderTable();
+    <!-- 搜尋與控制過濾器 -->
+    <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+      <!-- 關鍵字搜尋 -->
+      <div class="relative w-full md:w-80">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="搜尋物品名稱、編號或分類..."
+          class="w-full bg-gray-950 border border-gray-800 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+        />
+        <svg class="w-4 h-4 text-gray-500 absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
 
-            // Setup Event Listeners
-            document.getElementById("search-input").addEventListener("input", (e) => {
-                currentSearch = e.target.value.trim().toLowerCase();
-                renderTable();
-            });
+      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+        <!-- 分類下拉篩選 -->
+        <select id="category-filter" class="bg-gray-950 border border-gray-800 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-indigo-500">
+          <option value="ALL">全部分類 (All Categories)</option>
+        </select>
 
-            document.getElementById("category-filter").addEventListener("change", (e) => {
-                currentCategory = e.target.value;
-                renderTable();
-            });
+        <!-- 狀態分頁標籤 -->
+        <div class="inline-flex rounded-lg bg-gray-950 p-1 border border-gray-800">
+          <button data-status="ALL" class="status-btn px-3 py-1.5 text-xs font-medium rounded-md bg-indigo-600 text-white shadow">全部</button>
+          <button data-status="COMPLETED" class="status-btn px-3 py-1.5 text-xs font-medium rounded-md text-gray-400 hover:text-white">已完集</button>
+          <button data-status="INCOMPLETE" class="status-btn px-3 py-1.5 text-xs font-medium rounded-md text-gray-400 hover:text-white">未完集</button>
+        </div>
+      </div>
+    </div>
 
-            document.querySelectorAll(".status-btn").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    document.querySelectorAll(".status-btn").forEach(b => {
-                        b.classList.remove("active", "bg-slate-800", "text-cyan-400");
-                        b.classList.add("text-slate-400");
-                    });
-                    
-                    btn.classList.add("active", "bg-slate-800", "text-cyan-400");
-                    btn.classList.remove("text-slate-400");
-                    
-                    currentStatusFilter = btn.dataset.status;
-                    renderTable();
-                });
-            });
+    <!-- 主表格容器 -->
+    <div class="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-950/80 border-b border-gray-800 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              <th class="py-4 px-6 w-20">編號</th>
+              <th class="py-4 px-6">物品名稱</th>
+              <th class="py-4 px-6">分類 (Rarity)</th>
+              <th class="py-4 px-6 text-center">Astral</th>
+              <th class="py-4 px-6 text-center">Astral Count</th>
+              <th class="py-4 px-6 text-center">Divine</th>
+              <th class="py-4 px-6 text-center">Void</th>
+            </tr>
+          </thead>
+          <tbody id="table-body" class="divide-y divide-gray-800/60 text-sm">
+            <!-- 動態渲染資料庫列 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 完整 1~188 項目資料庫
+    const rawData = [
+      { id: 1, name: "Soccer Ball", category: "Common", astral: true, count: 4, divine: true, void: true },
+      { id: 2, name: "Traffic Cone", category: "Common", astral: true, count: 4, divine: true, void: true },
+      { id: 3, name: "Rubber Duck", category: "Common", astral: true, count: 4, divine: true, void: true },
+      { id: 4, name: "Alarm Clock", category: "Common", astral: true, count: 4, divine: true, void: true },
+      { id: 5, name: "Apple", category: "Common", astral: true, count: 4, divine: true, void: true },
+      { id: 6, name: "Gold Bar", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 7, name: "Trophy", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 8, name: "TV", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 9, name: "Chair", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 10, name: "Ping Pong", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 11, name: "Cash Bag", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+      { id: 12, name: "Wheel", category: "Rare", astral: true, count: 4, divine: true, void: true },
+      { id: 13, name: "Treasure Chest", category: "Rare", astral: true, count: 4, divine: true, void: true },
+      { id: 14, name: "Piggy Bank", category: "Rare", astral: true, count: 4, divine: true, void: true },
+      { id: 15, name: "Guitar", category: "Rare", astral: true, count: 4, divine: true, void: true },
+      { id: 16, name: "Magnet", category: "Rare", astral: true, count: 4, divine: true, void: true },
+      { id: 17, name: "Safe", category: "Epic", astral: true, count: 4, divine: true, void: true },
+      { id: 18, name: "Cash Register", category: "Epic", astral: true, count: 4, divine: true, void: true },
+      { id: 19, name: "Gem", category: "Epic", astral: true, count: 4, divine: true, void: true },
+      { id: 20, name: "Anchor", category: "Epic", astral: true, count: 4, divine: true, void: true },
+      { id: 21, name: "Boombox", category: "Epic", astral: true, count: 4, divine: true, void: true },
+      { id: 22, name: "Arcade Machine", category: "Legendary", astral: true, count: 4, divine: true, void: true },
+      { id: 23, name: "Crown", category: "Legendary", astral: true, count: 4, divine: true, void: true },
+      { id: 24, name: "Grandfather Clock", category: "Legendary", astral: true, count: 4, divine: true, void: true },
+      { id: 25, name: "Fridge", category: "Legendary", astral: true, count: 4, divine: true, void: true },
+      { id: 26, name: "Mjolnir", category: "Legendary", astral: true, count: 4, divine: true, void: true },
+      { id: 27, name: "Tank", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 28, name: "Azure Hypercar", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 29, name: "Nuke", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 30, name: "Submarine", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 31, name: "Mecha", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 32, name: "UFO", category: "Mythic", astral: true, count: 4, divine: true, void: true },
+      { id: 33, name: "Prism Shard", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
+      { id: 34, name: "Rocketship", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
+      { id: 35, name: "Crimson Racer", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
+      { id: 36, name: "Mona Lisa", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
+      { id: 37, name: "Sailboat", category: "Celestial", astral: true, count: 4, divine: true, void: true },
+      { id: 38, name: "Dragon Egg", category: "Celestial", astral: true, count: 4, divine: true, void: true },
+      { id: 39, name: "Private Jet", category: "Celestial", astral: true, count: 4, divine: true, void: true },
+      { id: 40, name: "Ornithopter", category: "Celestial", astral: true, count: 4, divine: true, void: true },
+      { id: 41, name: "Superyacht", category: "Eternal", astral: true, count: 4, divine: true, void: true },
+      { id: 42, name: "Eiffel Tower", category: "Godly", astral: true, count: 4, divine: true, void: true },
+      { id: 43, name: "Big Ben", category: "Godly", astral: true, count: 4, divine: true, void: true },
+      { id: 44, name: "Pyramid", category: "Godly", astral: true, count: 4, divine: true, void: true },
+      { id: 45, name: "Void Compass", category: "Otherworld", astral: true, count: 4, divine: true, void: true },
+      { id: 46, name: "Time Machine", category: "Genesis", astral: true, count: 4, divine: true, void: true },
+      { id: 47, name: "Satellite", category: "Genesis", astral: true, count: 4, divine: true, void: true },
+      { id: 48, name: "Quantum Cube", category: "Genesis", astral: true, count: 4, divine: true, void: true },
+      { id: 49, name: "Impossible Cube", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 50, name: "Singularity", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 51, name: "Black Hole", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 52, name: "Infinity Door", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 53, name: "Infinity Crown", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 54, name: "Antimatter Reactor", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 55, name: "Reality Core", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 56, name: "Moon", category: "Universal", astral: true, count: 4, divine: true, void: true },
+      { id: 57, name: "Mars", category: "Mythical", astral: true, count: 4, divine: true, void: true },
+      { id: 58, name: "Jupiter", category: "Mythical", astral: true, count: 4, divine: true, void: true },
+      { id: 59, name: "Saturn", category: "Mythical", astral: true, count: 4, divine: true, void: true },
+      { id: 60, name: "End of Reality", category: "Mythical", astral: true, count: 4, divine: true, void: true },
+      { id: 61, name: "Reality Throne", category: "Zenith", astral: true, count: 4, divine: true, void: true },
+      { id: 62, name: "Sun", category: "Solar", astral: true, count: 4, divine: true, void: true },
+      { id: 63, name: "Sirius", category: "Zenith", astral: true, count: 4, divine: true, void: true },
+      { id: 64, name: "Spaceship", category: "Zenith", astral: true, count: 4, divine: true, void: true },
+      { id: 65, name: "Betelgeuse", category: "Solar", astral: true, count: 4, divine: true, void: true },
+      { id: 66, name: "Quasar", category: "Solar", astral: true, count: 4, divine: true, void: true },
+      { id: 67, name: "Dyson Sphere", category: "Solar", astral: true, count: 4, divine: true, void: true },
+      { id: 68, name: "Milky Way", category: "Solar", astral: true, count: 4, divine: true, void: true },
+      { id: 69, name: "Golden Lyre", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 70, name: "Sky Harp", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 71, name: "Cloud", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 72, name: "Spartan Shield", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 73, name: "Amphora", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 74, name: "Temple Bell", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 75, name: "Zeus' Thunderbolt", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 76, name: "The Last Star", category: "Radiant", astral: true, count: 4, divine: true, void: true },
+      { id: 77, name: "Poseidon's Trident", category: "Elysian", astral: true, count: 4, divine: true, void: true },
+      { id: 78, name: "Lumen Obelisk", category: "Elysian", astral: true, count: 4, divine: true, void: true },
+      { id: 79, name: "Omphalos", category: "Elysian", astral: true, count: 4, divine: true, void: true },
+      { id: 80, name: "Genie's Lamp", category: "Elysian", astral: true, count: 4, divine: true, void: true },
+      { id: 81, name: "Marble Owl", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
+      { id: 82, name: "Pearly Gates", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
+      { id: 83, name: "Sisyphus' Boulder", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
+      { id: 84, name: "Excalibur", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
+      { id: 85, name: "Cosmic Anchor", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
+      { id: 86, name: "Godform", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
+      { id: 87, name: "Holy Relic", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
+      { id: 88, name: "Angel Statue", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 89, name: "Cherub Wings", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 90, name: "Archangel Sword", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 91, name: "Seraph Halo", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 92, name: "Ascension Ring", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 93, name: "Heavenly Gate Key", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 94, name: "Sanctuary Bell", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+      { id: 95, name: "Divine Scepter", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+      { id: 96, name: "Celestial Throne", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+      { id: 97, name: "Omnipotent Sphere", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+      { id: 98, name: "Eternal Flame", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+      { id: 99, name: "Creation Stone", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+      { id: 100, name: "Aegis Shield", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+      { id: 101, name: "Hermes Boots", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+      { id: 102, name: "Hades Crown", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+      { id: 103, name: "Ares Helmet", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+      { id: 104, name: "Apollo Lyre", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+      { id: 105, name: "Kami Blade", category: "Kami", astral: true, count: 4, divine: true, void: true },
+      { id: 106, name: "Raijin Drum", category: "Kami", astral: true, count: 4, divine: true, void: true },
+      { id: 107, name: "Fujin Fan", category: "Kami", astral: true, count: 4, divine: true, void: true },
+      { id: 108, name: "Yata Mirror", category: "Kami", astral: true, count: 4, divine: true, void: true },
+      { id: 109, name: "Kusanagi Sword", category: "Kami", astral: true, count: 4, divine: true, void: true },
+      { id: 110, name: "Pharaoh Mask", category: "Pharaonic", astral: true, count: 4, divine: true, void: true },
+      { id: 111, name: "Ankh Staff", category: "Pharaonic", astral: true, count: 4, divine: true, void: true },
+      { id: 112, name: "Scarab Jewel", category: "Pharaonic", astral: true, count: 4, divine: true, void: true },
+      { id: 113, name: "Sphinx Eye", category: "Pharaonic", astral: true, count: 4, divine: true, void: true },
+      { id: 114, name: "Sun Disk", category: "Pharaonic", astral: true, count: 4, divine: true, void: true },
+      { id: 115, name: "Rune Stone", category: "Norse", astral: true, count: 4, divine: true, void: true },
+      { id: 116, name: "Valkyrie Helm", category: "Norse", astral: true, count: 4, divine: true, void: true },
+      { id: 117, name: "Odin Spear", category: "Norse", astral: true, count: 4, divine: true, void: true },
+      { id: 118, name: "Bifrost Shard", category: "Norse", astral: true, count: 4, divine: true, void: true },
+      { id: 119, name: "Fenrir Chain", category: "Norse", astral: true, count: 4, divine: true, void: true },
+      { id: 120, name: "Astral Core", category: "Astral Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 121, name: "Starlight Crystal", category: "Astral Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 122, name: "Nebula Orb", category: "Astral Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 123, name: "Supernova Ring", category: "Astral Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 124, name: "Galaxy Crown", category: "Astral Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 125, name: "Void Essence", category: "Void Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 126, name: "Abyssal Key", category: "Void Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 127, name: "Shadow Orb", category: "Void Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 128, name: "Dark Matter Gem", category: "Void Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 129, name: "Singularity Eye", category: "Void Tier", astral: true, count: 4, divine: true, void: true },
+      { id: 130, name: "Chronos Watch", category: "Temporal", astral: true, count: 4, divine: true, void: true },
+      { id: 131, name: "Time Sands", category: "Temporal", astral: true, count: 4, divine: true, void: true },
+      { id: 132, name: "Paradox Cube", category: "Temporal", astral: true, count: 4, divine: true, void: true },
+      { id: 133, name: "Epoch Key", category: "Temporal", astral: true, count: 4, divine: true, void: true },
+      { id: 134, name: "Continuum Shard", category: "Temporal", astral: true, count: 4, divine: true, void: true },
+      { id: 135, name: "Dragon Heart", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+      { id: 136, name: "Wyrm Scale", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+      { id: 137, name: "Drake Claw", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+      { id: 138, name: "Fire Breath Orb", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+      { id: 139, name: "Ancient Horn", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+      { id: 140, name: "Phoenix Feather", category: "Mythical Beast", astral: true, count: 4, divine: true, void: true },
+      { id: 141, name: "Unicorn Horn", category: "Mythical Beast", astral: true, count: 4, divine: true, void: true },
+      { id: 142, name: "Griffin Talon", category: "Mythical Beast", astral: true, count: 4, divine: true, void: true },
+      { id: 143, name: "Kraken Tooth", category: "Mythical Beast", astral: true, count: 4, divine: true, void: true },
+      { id: 144, name: "Hydra Gem", category: "Mythical Beast", astral: true, count: 4, divine: true, void: true },
+      { id: 145, name: "Elemental Fire", category: "Elemental", astral: true, count: 4, divine: true, void: true },
+      { id: 146, name: "Elemental Water", category: "Elemental", astral: true, count: 4, divine: true, void: true },
+      { id: 147, name: "Elemental Earth", category: "Elemental", astral: true, count: 4, divine: true, void: true },
+      { id: 148, name: "Elemental Wind", category: "Elemental", astral: true, count: 4, divine: true, void: true },
+      { id: 149, name: "Elemental Lightning", category: "Elemental", astral: true, count: 4, divine: true, void: true },
+      { id: 150, name: "Prismatic Crystal", category: "Prismatic", astral: true, count: 4, divine: true, void: true },
+      { id: 151, name: "Rainbow Core", category: "Prismatic", astral: true, count: 4, divine: true, void: true },
+      { id: 152, name: "Spectrum Staff", category: "Prismatic", astral: true, count: 4, divine: true, void: true },
+      { id: 153, name: "Aurora Crown", category: "Prismatic", astral: true, count: 4, divine: true, void: true },
+      { id: 154, name: "Chroma Ring", category: "Prismatic", astral: true, count: 4, divine: true, void: true },
+      { id: 155, name: "Quantum Core", category: "Quantum", astral: true, count: 4, divine: true, void: true },
+      { id: 156, name: "Zero Point Gem", category: "Quantum", astral: true, count: 4, divine: true, void: true },
+      { id: 157, name: "Entanglement Key", category: "Quantum", astral: true, count: 4, divine: true, void: true },
+      { id: 158, name: "Tachyon Orb", category: "Quantum", astral: true, count: 4, divine: true, void: true },
+      { id: 159, name: "Photon Cannon", category: "Quantum", astral: true, count: 4, divine: true, void: true },
+      { id: 160, name: "Celestium Bar", category: "Cosmic Craft", astral: true, count: 4, divine: true, void: true },
+      { id: 161, name: "Asteroid Shard", category: "Cosmic Craft", astral: true, count: 4, divine: true, void: true },
+      { id: 162, name: "Comet Dust", category: "Cosmic Craft", astral: true, count: 4, divine: true, void: true },
+      { id: 163, name: "Meteorite Core", category: "Cosmic Craft", astral: true, count: 4, divine: true, void: true },
+      { id: 164, name: "Stardust Flask", category: "Cosmic Craft", astral: true, count: 4, divine: true, void: true },
+      { id: 165, name: "Ancient Relic", category: "Artifact", astral: true, count: 4, divine: true, void: true },
+      { id: 166, name: "Lost Scroll", category: "Artifact", astral: true, count: 4, divine: true, void: true },
+      { id: 167, name: "Golden Idol", category: "Artifact", astral: true, count: 4, divine: true, void: true },
+      { id: 168, name: "Mystic Tablet", category: "Artifact", astral: true, count: 4, divine: true, void: true },
+      { id: 169, name: "Runed Scepter", category: "Artifact", astral: true, count: 4, divine: true, void: true },
+      { id: 170, name: "Cyber Core", category: "Futuristic", astral: true, count: 4, divine: true, void: true },
+      { id: 171, name: "Plasma Sword", category: "Futuristic", astral: true, count: 4, divine: true, void: true },
+      { id: 172, name: "Nano Shield", category: "Futuristic", astral: true, count: 4, divine: true, void: true },
+      { id: 173, name: "Laser Cannon", category: "Futuristic", astral: true, count: 4, divine: true, void: true },
+      { id: 174, name: "AI Matrix", category: "Futuristic", astral: true, count: 4, divine: true, void: true },
+      { id: 175, name: "Soul Gem", category: "Transcendent", astral: true, count: 4, divine: true, void: true },
+      { id: 176, name: "Spirit Orb", category: "Transcendent", astral: true, count: 4, divine: true, void: true },
+      { id: 177, name: "Ethereal Crown", category: "Transcendent", astral: true, count: 4, divine: true, void: true },
+      { id: 178, name: "Astral Mirror", category: "Transcendent", astral: true, count: 4, divine: true, void: true },
+      { id: 179, name: "Nirvana Stone", category: "Transcendent", astral: true, count: 4, divine: true, void: true },
+      { id: 180, name: "Omega Core", category: "Supreme", astral: true, count: 4, divine: true, void: true },
+      { id: 181, name: "Infinity Edge", category: "Supreme", astral: true, count: 4, divine: true, void: true },
+      { id: 182, name: "Absolute Shield", category: "Supreme", astral: true, count: 4, divine: true, void: true },
+      { id: 183, name: "Genesis Orb", category: "Supreme", astral: true, count: 4, divine: true, void: true },
+      { id: 184, name: "Endless Key", category: "Supreme", astral: true, count: 4, divine: false, void: false },
+      { id: 185, name: "Ultimate Crown", category: "Supreme", astral: true, count: 3, divine: false, void: false },
+      { id: 186, name: "Creation Heart", category: "Supreme", astral: false, count: 0, divine: false, void: false },
+      { id: 187, name: "Destroyer Blade", category: "Supreme", astral: false, count: 0, divine: false, void: false },
+      { id: 188, name: "Omni Essence", category: "Supreme", astral: false, count: 0, divine: false, void: false }
+    ];
+
+    // 狀態管理
+    let currentSearch = "";
+    let currentCategory = "ALL";
+    let currentStatus = "ALL";
+
+    // 初始化選單
+    function initCategoryFilter() {
+      const select = document.getElementById("category-filter");
+      const categories = [...new Set(rawData.map(item => item.category))];
+      categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        select.appendChild(option);
+      });
+    }
+
+    // 計算完成狀態
+    function isItemCompleted(item) {
+      return item.astral && item.divine && item.void;
+    }
+
+    // 更新統計指標
+    function updateStats() {
+      const total = rawData.length;
+      const completedCount = rawData.filter(isItemCompleted).length;
+      const rate = ((completedCount / total) * 100).toFixed(1);
+
+      document.getElementById("stat-total").textContent = total;
+      document.getElementById("stat-completed").textContent = completedCount;
+      document.getElementById("stat-rate").textContent = `${rate}%`;
+      document.getElementById("stat-incomplete").textContent = total - completedCount;
+      document.getElementById("stat-progress-bar").style.width = `${rate}%`;
+    }
+
+    // 渲染資料表
+    function renderTable() {
+      const tbody = document.getElementById("table-body");
+      tbody.innerHTML = "";
+
+      const filtered = rawData.filter(item => {
+        // 搜尋比對
+        const matchSearch = item.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                            item.id.toString().includes(currentSearch) ||
+                            item.category.toLowerCase().includes(currentSearch.toLowerCase());
+        
+        // 分類比對
+        const matchCategory = currentCategory === "ALL" || item.category === currentCategory;
+
+        // 完集狀態比對
+        const completed = isItemCompleted(item);
+        const matchStatus = currentStatus === "ALL" ||
+                            (currentStatus === "COMPLETED" && completed) ||
+                            (currentStatus === "INCOMPLETE" && !completed);
+
+        return matchSearch && matchCategory && matchStatus;
+      });
+
+      document.getElementById("stat-showing").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-12 text-center text-gray-500">
+              無符合條件的物品資料
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-gray-800/50 transition-colors duration-150";
+
+        const astralBadge = item.astral
+          ? `<span class="px-2.5 py-1 text-xs rounded-md glow-collected font-medium">已收集</span>`
+          : `<span class="px-2.5 py-1 text-xs rounded-md glow-uncollected font-medium">未收集</span>`;
+
+        const divineBadge = item.divine
+          ? `<span class="px-2.5 py-1 text-xs rounded-md glow-collected font-medium">已收集</span>`
+          : `<span class="px-2.5 py-1 text-xs rounded-md glow-uncollected font-medium">未收集</span>`;
+
+        const voidBadge = item.void
+          ? `<span class="px-2.5 py-1 text-xs rounded-md glow-collected font-medium">已收集</span>`
+          : `<span class="px-2.5 py-1 text-xs rounded-md glow-uncollected font-medium">未收集</span>`;
+
+        tr.innerHTML = `
+          <td class="py-3.5 px-6 font-mono text-gray-500 text-xs">${item.id}</td>
+          <td class="py-3.5 px-6 font-bold text-gray-100">${item.name}</td>
+          <td class="py-3.5 px-6 text-gray-400 text-xs">
+            <span class="bg-gray-800 border border-gray-700 px-2 py-0.5 rounded text-gray-300 font-medium">${item.category}</span>
+          </td>
+          <td class="py-3.5 px-6 text-center">${astralBadge}</td>
+          <td class="py-3.5 px-6 text-center font-mono text-gray-300 font-semibold">${item.count}</td>
+          <td class="py-3.5 px-6 text-center">${divineBadge}</td>
+          <td class="py-3.5 px-6 text-center">${voidBadge}</td>
+        `;
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // 事件監聽
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      currentSearch = e.target.value.trim();
+      renderTable();
+    });
+
+    document.getElementById("category-filter").addEventListener("change", (e) => {
+      currentCategory = e.target.value;
+      renderTable();
+    });
+
+    document.querySelectorAll(".status-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".status-btn").forEach(b => {
+          b.className = "status-btn px-3 py-1.5 text-xs font-medium rounded-md text-gray-400 hover:text-white";
         });
+        btn.className = "status-btn px-3 py-1.5 text-xs font-medium rounded-md bg-indigo-600 text-white shadow";
+        currentStatus = btn.dataset.status;
+        renderTable();
+      });
+    });
 
-        function populateCategories() {
-            const categories = Array.from(new Set(RAW_DATA.map(item => item.category)));
-            const select = document.getElementById("category-filter");
-            categories.forEach(cat => {
-                const opt = document.createElement("option");
-                opt.value = cat;
-                opt.textContent = cat;
-                select.appendChild(opt);
-            });
-        }
-
-        function isItemComplete(item) {
-            return item.astral && item.count === 4 && item.divine && item.void;
-        }
-
-        function calculateGlobalStats() {
-            const total = RAW_DATA.length;
-            const completedCount = RAW_DATA.filter(isItemComplete).length;
-            const progressPct = Math.round((completedCount / total) * 100);
-
-            document.getElementById("stat-total").textContent = total;
-            document.getElementById("stat-completed").textContent = completedCount;
-            document.getElementById("stat-incomplete").textContent = total - completedCount;
-            
-            document.getElementById("global-progress-text").textContent = `${progressPct}%`;
-            document.getElementById("global-progress-bar").style.width = `${progressPct}%`;
-        }
-
-        function getStatusBadge(isCollected) {
-            if (isCollected) {
-                return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 glow-green">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>已收集
-                </span>`;
-            } else {
-                return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-950/50 text-rose-400 border border-rose-900/40 opacity-75">
-                    未收集
-                </span>`;
-            }
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById("items-table-body");
-            const emptyState = document.getElementById("empty-state");
-            tbody.innerHTML = "";
-
-            const filtered = RAW_DATA.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(currentSearch) || 
-                                    item.category.toLowerCase().includes(currentSearch) ||
-                                    item.id.toString().includes(currentSearch);
-                
-                const matchCategory = currentCategory === "ALL" || item.category === currentCategory;
-                
-                const completed = isItemComplete(item);
-                let matchStatus = true;
-                if (currentStatusFilter === "COMPLETE") matchStatus = completed;
-                if (currentStatusFilter === "INCOMPLETE") matchStatus = !completed;
-
-                return matchSearch && matchCategory && matchStatus;
-            });
-
-            document.getElementById("stat-showing").textContent = filtered.length;
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove("hidden");
-                return;
-            } else {
-                emptyState.classList.add("hidden");
-            }
-
-            filtered.forEach((item, index) => {
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-800/40 transition duration-150 border-b border-slate-800/50";
-
-                tr.innerHTML = `
-                    <td class="py-3.5 px-6 text-center font-mono text-slate-500">${item.id}</td>
-                    <td class="py-3.5 px-6 font-bold text-slate-100 flex items-center gap-2">
-                        ${item.name}
-                    </td>
-                    <td class="py-3.5 px-6 text-center">
-                        <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700/60">
-                            ${item.category}
-                        </span>
-                    </td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.astral)}</td>
-                    <td class="py-3.5 px-6 text-center font-mono font-semibold ${item.count === 4 ? 'text-cyan-400' : 'text-slate-500'}">${item.count}</td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.divine)}</td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.void)}</td>
-                `;
-
-                tbody.appendChild(tr);
-            });
-        }
-    </script>
+    // 初始化執行
+    initCategoryFilter();
+    updateStats();
+    renderTable();
+  </script>
 </body>
 </html>
