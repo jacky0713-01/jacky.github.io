@@ -72,152 +72,138 @@
 
 <!-- 表格外容器：設定響應式與滾動條 -->
 <div class="table-wrapper" style="max-height: 500px; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.15); borderRadius: 6px;">
-    <table style="margin-bottom: 0;">
-        <thead style="position: sticky; top: 0; background: linear-gradient(180deg, #1f2429 0%, #171a1d 100%); z-index: 10; border-bottom: 2px solid #4a90e2;">
-    <tr>
-        <th style="width: 70px; text-align: center; white-space: nowrap; color: #4a90e2; font-weight: bold;">編號</th>
-        <th style="white-space: nowrap; color: #ffffff; font-weight: bold;">物品名稱</th>
-        <th style="width: 110px; text-align: center; white-space: nowrap; color: #bbbbbb;">分類</th>
-        <th style="width: 100px; text-align: center; white-space: nowrap; color: #4fc3f7;">Astral</th>
-        <th style="width: 120px; text-align: center; white-space: nowrap; color: #4fc3f7;">Astral Count</th>
-        <th style="width: 100px; text-align: center; white-space: nowrap; color: #ba68c8;">Divine</th>
-        <th style="width: 100px; text-align: center; white-space: nowrap; color: #ffb74d;">Void</th>
-    </tr>
-</thead>
-        <tbody>
-            <tr>
-                <td style="text-align: center;">1</td>
-                <td>Soccer Ball</td>
-                <td>Common</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">2</td>
-                <td>Traffic Cone</td>
-                <td>Common</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">3</td>
-                <td>Rubber Duck</td>
-                <td>Common</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">4</td>
-                <td>Alarm Clock</td>
-                <td>Common</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">5</td>
-                <td>Apple</td>
-                <td>Common</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">6</td>
-                <td>Gold Bar</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">7</td>
-                <td>Trophy</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">8</td>
-                <td>TV</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">9</td>
-                <td>Chair</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">10</td>
-                <td>Ping Pong</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">11</td>
-                <td>Cash Bag</td>
-                <td>Uncommon</td>
-                <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">12</td>
-                <td>Wheel</td>
-                <td>Rare</td>
-               <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">13</td>
-                <td>Treasure Chest</td>
-                <td>Rare</td>
-                 <td>已收集</td>
-                <td>4
-</td>
-                <td>已收集</td>
-                <td>已收集</td>
-            </tr>
-            <!-- 可以照著上述格式繼續新增 14 ~ 150+ 的數據 -->
-        </tbody>
-    </table>
+<table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 0;">
+    <thead style="position: sticky; top: 0; background: #1f2429; z-index: 10; border-bottom: 2px solid #4a90e2;">
+        <tr>
+            <th style="width: 8%; text-align: center; white-space: nowrap; color: #4a90e2; font-weight: bold; padding: 12px 5px;">編號</th>
+            <th style="width: 28%; text-align: left; white-space: nowrap; color: #ffffff; font-weight: bold; padding: 12px 10px;">物品名稱</th>
+            <th style="width: 14%; text-align: center; white-space: nowrap; color: #bbbbbb; padding: 12px 5px;">分類</th>
+            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #4fc3f7; padding: 12px 5px;">Astral</th>
+            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #4fc3f7; padding: 12px 5px;">Astral Count</th>
+            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #ba68c8; padding: 12px 5px;">Divine</th>
+            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #ffb74d; padding: 12px 5px;">Void</th>
+        </tr>
+    </thead>
+    <tbody style="background-color: #272c30; color: #e0e0e0;">
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">1</td>
+            <td style="text-align: left; font-weight: bold;">Soccer Ball</td>
+            <td style="text-align: center; color: #aaa;">Common</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">2</td>
+            <td style="text-align: left; font-weight: bold;">Traffic Cone</td>
+            <td style="text-align: center; color: #aaa;">Common</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">3</td>
+            <td style="text-align: left; font-weight: bold;">Rubber Duck</td>
+            <td style="text-align: center; color: #aaa;">Common</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">4</td>
+            <td style="text-align: left; font-weight: bold;">Alarm Clock</td>
+            <td style="text-align: center; color: #aaa;">Common</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">5</td>
+            <td style="text-align: left; font-weight: bold;">Apple</td>
+            <td style="text-align: center; color: #aaa;">Common</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">6</td>
+            <td style="text-align: left; font-weight: bold;">Gold Bar</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">7</td>
+            <td style="text-align: left; font-weight: bold;">Trophy</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">8</td>
+            <td style="text-align: left; font-weight: bold;">TV</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">9</td>
+            <td style="text-align: left; font-weight: bold;">Chair</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">10</td>
+            <td style="text-align: left; font-weight: bold;">Ping Pong</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">11</td>
+            <td style="text-align: left; font-weight: bold;">Cash Bag</td>
+            <td style="text-align: center; color: #aaa;">Uncommon</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">12</td>
+            <td style="text-align: left; font-weight: bold;">Wheel</td>
+            <td style="text-align: center; color: #aaa;">Rare</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            <td style="text-align: center;">13</td>
+            <td style="text-align: left; font-weight: bold;">Treasure Chest</td>
+            <td style="text-align: center; color: #aaa;">Rare</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center;">4</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+            <td style="text-align: center; color: #28a745;">已收集</td>
+        </tr>
+    </tbody>
+</table>
 </div>
 
 		<!-- Four: 下載或追蹤紀錄 -->
