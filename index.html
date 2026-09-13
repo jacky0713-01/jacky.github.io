@@ -20,1779 +20,427 @@
 				</div>
 			</section>
 
-		<!-- One: 核心介紹與當前進度 -->
-			<section id="one" class="main style1">
-				<div class="container">
-					<div class="row gtr-150">
-						<div class="col-6 col-12-medium">
-							<header class="major">
-								<h2>丟一枚硬幣<br />收集進度</h2>
-							</header>
-							<p>本站紀錄《Throw a Coin》遊戲中的各類硬幣變異（Mutations）個人解鎖狀態。</p>
-							<p>透過持續投擲與自動掛機（Auto-Farm）最佳化，持續挑戰各級別的硬幣變異！</p>
-						</div>
-						<div class="col-6 col-12-medium imp-medium">
-							<span class="image fit"><img src="images/coin01.jpg" alt="Coins Collection" /></span>
-						</div>
-					</div>
-				</div>
-			</section>
+		<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Item Collection Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: '#1e293b',
+                        accentBlue: '#38bdf8',
+                        accentPurple: '#c084fc',
+                        accentGold: '#fbbf24',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        .glow-green {
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
+        }
+        .glow-red {
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased pb-12">
 
-		<!-- Two: 收集數據統計 -->
-			<section id="two" class="main style2">
-				<div class="container">
-					<div class="row gtr-150">
-						<div class="col-6 col-12-medium">
-							<ul class="major-icons">
-								<li><span class="icon solid style1 major fa-gem"></span></li>
-								<li><span class="icon solid style2 major fa-bolt"></span></li>
-								<li><span class="icon solid style3 major fa-trophy"></span></li>
-								<li><span class="icon solid style4 major fa-chart-line"></span></li>
-								<li><span class="icon solid style5 major fa-robot"></span></li>
-								<li><span class="icon solid style6 major fa-check-circle"></span></li>
-							</ul>
-						</div>
-						<div class="col-6 col-12-medium">
-							<header class="major">
-								<h2>圖鑑收集與機率數據</h2>
-							</header>
-							<p><strong>基礎/大/巨大/彩虹 (Base & BIG & HUGE & RAINBOW)</strong>：解鎖進度 100%</p>
-							<p><strong>星界/傳奇/虛空 (Astral & Divine & Void)</strong>：持續挑戰高倍率變異與限定光環中。</p>
-							<p>針對不同模擬器掛機設定與投擲效率進行記錄，優化自動投擲與幸運加成（Luck Boost）效益。</p>
-						</div>
-					</div>
-				</div>
-			</section>
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-cyan-500/20">
+                    🏆
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                        物品圖鑑收集庫 <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">v2.0 PRO</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Game Item Collection Database</p>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="flex items-center gap-6 text-sm">
+                <div class="flex flex-col">
+                    <span class="text-xs text-slate-400">總全收集率</span>
+                    <span id="global-progress-text" class="font-bold text-cyan-400 font-mono">0%</span>
+                </div>
+                <div class="w-32 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700">
+                    <div id="global-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<!-- Roblox Throw a Coin 完整物品與變異機率資料表 -->
-<header class="major">
-    <h2>物品與變異機率完整資料表</h2>
-</header>
-<p>收錄《Throw a Coin》遊戲中所有物品之稀有度、收集進度（可上下滾動查看）：</p>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
 
-<!-- 表格外容器：設定響應式與滾動條 -->
-<div class="table-wrapper" style="max-height: 500px; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.15); borderRadius: 6px;">
-<table style="width: 100%; table-layout: fixed; border-collapse: collapse; margin-bottom: 0;">
-    <thead style="position: sticky; top: 0; background: #1f2429; z-index: 10; border-bottom: 2px solid #4a90e2;">
-        <tr>
-            <th style="width: 8%; text-align: center; white-space: nowrap; color: #4a90e2; font-weight: bold; padding: 12px 5px;">編號</th>
-            <th style="width: 28%; text-align: left; white-space: nowrap; color: #ffffff; font-weight: bold; padding: 12px 10px;">物品名稱</th>
-            <th style="width: 14%; text-align: center; white-space: nowrap; color: #bbbbbb; padding: 12px 5px;">分類</th>
-            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #4fc3f7; padding: 12px 5px;">Astral</th>
-            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #4fc3f7; padding: 12px 5px;">Astral Count</th>
-            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #ba68c8; padding: 12px 5px;">Divine</th>
-            <th style="width: 12.5%; text-align: center; white-space: nowrap; color: #ffb74d; padding: 12px 5px;">Void</th>
-        </tr>
-    </thead>
-    <tbody style="background-color: #272c30; color: #e0e0e0;">
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">1</td>
-            <td style="text-align: left; font-weight: bold;">Soccer Ball</td>
-            <td style="text-align: center; color: #aaa;">Common</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">2</td>
-            <td style="text-align: left; font-weight: bold;">Traffic Cone</td>
-            <td style="text-align: center; color: #aaa;">Common</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">3</td>
-            <td style="text-align: left; font-weight: bold;">Rubber Duck</td>
-            <td style="text-align: center; color: #aaa;">Common</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">4</td>
-            <td style="text-align: left; font-weight: bold;">Alarm Clock</td>
-            <td style="text-align: center; color: #aaa;">Common</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">5</td>
-            <td style="text-align: left; font-weight: bold;">Apple</td>
-            <td style="text-align: center; color: #aaa;">Common</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">6</td>
-            <td style="text-align: left; font-weight: bold;">Gold Bar</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">7</td>
-            <td style="text-align: left; font-weight: bold;">Trophy</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">8</td>
-            <td style="text-align: left; font-weight: bold;">TV</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">9</td>
-            <td style="text-align: left; font-weight: bold;">Chair</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">10</td>
-            <td style="text-align: left; font-weight: bold;">Ping Pong</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">11</td>
-            <td style="text-align: left; font-weight: bold;">Cash Bag</td>
-            <td style="text-align: center; color: #aaa;">Uncommon</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">12</td>
-            <td style="text-align: left; font-weight: bold;">Wheel</td>
-            <td style="text-align: center; color: #aaa;">Rare</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">13</td>
-            <td style="text-align: left; font-weight: bold;">Treasure Chest</td>
-            <td style="text-align: center; color: #aaa;">Rare</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">14</td>
-    <td style="text-align: left; font-weight: bold;">Piggy Bank</td>
-    <td style="text-align: center; color: #aaa;">Rare</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">15</td>
-    <td style="text-align: left; font-weight: bold;">Guitar</td>
-    <td style="text-align: center; color: #aaa;">Rare</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">16</td>
-    <td style="text-align: left; font-weight: bold;">Magnet</td>
-    <td style="text-align: center; color: #aaa;">Rare</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">17</td>
-    <td style="text-align: left; font-weight: bold;">Safe</td>
-    <td style="text-align: center; color: #aaa;">Epic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">18</td>
-    <td style="text-align: left; font-weight: bold;">Cash Register</td>
-    <td style="text-align: center; color: #aaa;">Epic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">19</td>
-    <td style="text-align: left; font-weight: bold;">Gem</td>
-    <td style="text-align: center; color: #aaa;">Epic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">20</td>
-    <td style="text-align: left; font-weight: bold;">Anchor</td>
-    <td style="text-align: center; color: #aaa;">Epic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">21</td>
-    <td style="text-align: left; font-weight: bold;">Boombox</td>
-    <td style="text-align: center; color: #aaa;">Epic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">22</td>
-    <td style="text-align: left; font-weight: bold;">Arcade Machine</td>
-    <td style="text-align: center; color: #aaa;">Legendary</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">23</td>
-    <td style="text-align: left; font-weight: bold;">Crown</td>
-    <td style="text-align: center; color: #aaa;">Legendary</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">24</td>
-    <td style="text-align: left; font-weight: bold;">Grandfather Clock</td>
-    <td style="text-align: center; color: #aaa;">Legendary</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">25</td>
-    <td style="text-align: left; font-weight: bold;">Fridge</td>
-    <td style="text-align: center; color: #aaa;">Legendary</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">26</td>
-    <td style="text-align: left; font-weight: bold;">Mjolnir</td>
-    <td style="text-align: center; color: #aaa;">Legendary</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">27</td>
-    <td style="text-align: left; font-weight: bold;">Tank</td>
-    <td style="text-align: center; color: #aaa;">Mythic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">28</td>
-    <td style="text-align: left; font-weight: bold;">Azure Hypercar</td>
-    <td style="text-align: center; color: #aaa;">Mythic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">30</td>
-    <td style="text-align: left; font-weight: bold;">Submarine</td>
-    <td style="text-align: center; color: #aaa;">Mythic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">31</td>
-    <td style="text-align: left; font-weight: bold;">Meeps</td>
-    <td style="text-align: center; color: #aaa;">Mythic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">32</td>
-    <td style="text-align: left; font-weight: bold;">UFO</td>
-    <td style="text-align: center; color: #aaa;">Mythic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">33</td>
-    <td style="text-align: left; font-weight: bold;">Prism Shard</td>
-    <td style="text-align: center; color: #aaa;">Cosmic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">34</td>
-    <td style="text-align: left; font-weight: bold;">Rocketship</td>
-    <td style="text-align: center; color: #aaa;">Cosmic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">35</td>
-    <td style="text-align: left; font-weight: bold;">Crimson Racer</td>
-    <td style="text-align: center; color: #aaa;">Cosmic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">36</td>
-    <td style="text-align: left; font-weight: bold;">Mona Lisa</td>
-    <td style="text-align: center; color: #aaa;">Cosmic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">37</td>
-    <td style="text-align: left; font-weight: bold;">Sailboat</td>
-    <td style="text-align: center; color: #aaa;">Celestial</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">38</td>
-    <td style="text-align: left; font-weight: bold;">Dragon Egg</td>
-    <td style="text-align: center; color: #aaa;">Celestial</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">39</td>
-    <td style="text-align: left; font-weight: bold;">Private Jet</td>
-    <td style="text-align: center; color: #aaa;">Celestial</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">40</td>
-    <td style="text-align: left; font-weight: bold;">Ornithopter</td>
-    <td style="text-align: center; color: #aaa;">Celestial</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">41</td>
-    <td style="text-align: left; font-weight: bold;">Superyacht</td>
-    <td style="text-align: center; color: #aaa;">Eternal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">42</td>
-    <td style="text-align: left; font-weight: bold;">Eiffel Tower</td>
-    <td style="text-align: center; color: #aaa;">Godly</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">43</td>
-    <td style="text-align: left; font-weight: bold;">Big Ben</td>
-    <td style="text-align: center; color: #aaa;">Godly</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">45</td>
-    <td style="text-align: left; font-weight: bold;">Void Compass</td>
-    <td style="text-align: center; color: #aaa;">Otherversal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">46</td>
-    <td style="text-align: left; font-weight: bold;">Time Machine</td>
-    <td style="text-align: center; color: #aaa;">Genesis</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">47</td>
-    <td style="text-align: left; font-weight: bold;">Satellite</td>
-    <td style="text-align: center; color: #aaa;">Genesis</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">48</td>
-    <td style="text-align: left; font-weight: bold;">Quantum Cube</td>
-    <td style="text-align: center; color: #aaa;">Genesis</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">49</td>
-    <td style="text-align: left; font-weight: bold;">Impossible Cube</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">50</td>
-    <td style="text-align: left; font-weight: bold;">Singularity</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">51</td>
-    <td style="text-align: left; font-weight: bold;">Black Hole</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">52</td>
-    <td style="text-align: left; font-weight: bold;">Infinity Door</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">53</td>
-    <td style="text-align: left; font-weight: bold;">Infinity Crown</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">54</td>
-    <td style="text-align: left; font-weight: bold;">Antimatter Reactor</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">55</td>
-    <td style="text-align: left; font-weight: bold;">Reality Core</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">56</td>
-    <td style="text-align: left; font-weight: bold;">Moon</td>
-    <td style="text-align: center; color: #aaa;">Universal</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">57</td>
-    <td style="text-align: left; font-weight: bold;">Mars</td>
-    <td style="text-align: center; color: #aaa;">Mythical</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">58</td>
-    <td style="text-align: left; font-weight: bold;">Jupiter</td>
-    <td style="text-align: center; color: #aaa;">Mythical</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">59</td>
-    <td style="text-align: left; font-weight: bold;">Saturn</td>
-    <td style="text-align: center; color: #aaa;">Mythical</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">60</td>
-    <td style="text-align: left; font-weight: bold;">End of Reality</td>
-    <td style="text-align: center; color: #aaa;">Mythical</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">61</td>
-    <td style="text-align: left; font-weight: bold;">Reality Throne</td>
-    <td style="text-align: center; color: #aaa;">Zenith</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">62</td>
-    <td style="text-align: left; font-weight: bold;">Sun</td>
-    <td style="text-align: center; color: #aaa;">Solar</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">63</td>
-    <td style="text-align: left; font-weight: bold;">Sirius</td>
-    <td style="text-align: center; color: #aaa;">Zenith</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">64</td>
-    <td style="text-align: left; font-weight: bold;">Spaceship</td>
-    <td style="text-align: center; color: #aaa;">Zenith</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">65</td>
-    <td style="text-align: left; font-weight: bold;">Betelgeuse</td>
-    <td style="text-align: center; color: #aaa;">Solar</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">66</td>
-    <td style="text-align: left; font-weight: bold;">Quasar</td>
-    <td style="text-align: center; color: #aaa;">Solar</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">67</td>
-    <td style="text-align: left; font-weight: bold;">Dyson Sphere</td>
-    <td style="text-align: center; color: #aaa;">Solar</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">68</td>
-    <td style="text-align: left; font-weight: bold;">Milky Way</td>
-    <td style="text-align: center; color: #aaa;">Solar</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">69</td>
-    <td style="text-align: left; font-weight: bold;">Golden Lyre</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">70</td>
-    <td style="text-align: left; font-weight: bold;">Sky Harp</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">71</td>
-    <td style="text-align: left; font-weight: bold;">Cloud</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">72</td>
-    <td style="text-align: left; font-weight: bold;">Spartan Shield</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">73</td>
-    <td style="text-align: left; font-weight: bold;">Amphora</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">74</td>
-    <td style="text-align: left; font-weight: bold;">Temple Bell</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">75</td>
-    <td style="text-align: left; font-weight: bold;">Zeus' Thunderbolt</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">76</td>
-    <td style="text-align: left; font-weight: bold;">The Last Star</td>
-    <td style="text-align: center; color: #aaa;">Radiant</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">77</td>
-    <td style="text-align: left; font-weight: bold;">Poseidon's Trident</td>
-    <td style="text-align: center; color: #aaa;">Elysian</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">78</td>
-    <td style="text-align: left; font-weight: bold;">Lumen Obelisk</td>
-    <td style="text-align: center; color: #aaa;">Elysian</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">79</td>
-    <td style="text-align: left; font-weight: bold;">omphalos</td>
-    <td style="text-align: center; color: #aaa;">Elysian</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">80</td>
-    <td style="text-align: left; font-weight: bold;">Genie's Lamp</td>
-    <td style="text-align: center; color: #aaa;">Elysian</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">81</td>
-    <td style="text-align: left; font-weight: bold;">Marble Owl</td>
-    <td style="text-align: center; color: #aaa;">Hyperion</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">82</td>
-    <td style="text-align: left; font-weight: bold;">Pearly Gates</td>
-    <td style="text-align: center; color: #aaa;">Hyperion</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">83</td>
-    <td style="text-align: left; font-weight: bold;">Sisyphus' Boulder</td>
-    <td style="text-align: center; color: #aaa;">Hyperion</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">84</td>
-    <td style="text-align: left; font-weight: bold;">Excalibur</td>
-    <td style="text-align: center; color: #aaa;">Hyperion</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">85</td>
-    <td style="text-align: left; font-weight: bold;">Cosmic Anchor</td>
-    <td style="text-align: center; color: #aaa;">Mythic+</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">86</td>
-    <td style="text-align: left; font-weight: bold;">Godform</td>
-    <td style="text-align: center; color: #aaa;">Mythic+</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">87</td>
-    <td style="text-align: left; font-weight: bold;">Holy Relic</td>
-    <td style="text-align: center; color: #aaa;">Mythic+</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr>
-<tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-    <td style="text-align: center;">88</td>
-    <td style="text-align: left; font-weight: bold;">Angel Statue</td>
-    <td style="text-align: center; color: #aaa;">Angelic</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center;">4</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-    <td style="text-align: center; color: #28a745;">已收集</td>
-</tr><tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">89</td>
-            <td style="text-align: left; font-weight: bold;">Light Engine</td>
-            <td style="text-align: center; color: #aaa;">Angelic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">90</td>
-            <td style="text-align: left; font-weight: bold;">Creation Throne</td>
-            <td style="text-align: center; color: #aaa;">Angelic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">91</td>
-            <td style="text-align: left; font-weight: bold;">Floating Island</td>
-            <td style="text-align: center; color: #aaa;">Godlike</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">92</td>
-            <td style="text-align: left; font-weight: bold;">Dream Universe</td>
-            <td style="text-align: center; color: #aaa;">Godlike</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">93</td>
-            <td style="text-align: left; font-weight: bold;">Theseus Ship</td>
-            <td style="text-align: center; color: #aaa;">Aurelian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">94</td>
-            <td style="text-align: left; font-weight: bold;">Omphalos Stone</td>
-            <td style="text-align: center; color: #aaa;">Aurelian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">95</td>
-            <td style="text-align: left; font-weight: bold;">Trojan Horse</td>
-            <td style="text-align: center; color: #aaa;">Aurelian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">96</td>
-            <td style="text-align: left; font-weight: bold;">Cyclops' Forge</td>
-            <td style="text-align: center; color: #aaa;">Aurelian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">97</td>
-            <td style="text-align: left; font-weight: bold;">Tartarus</td>
-            <td style="text-align: center; color: #aaa;">Olympian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">98</td>
-            <td style="text-align: left; font-weight: bold;">Mount Olympus</td>
-            <td style="text-align: center; color: #aaa;">Olympian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">99</td>
-            <td style="text-align: left; font-weight: bold;">Pandora's Box</td>
-            <td style="text-align: center; color: #aaa;">Promethean</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">100</td>
-            <td style="text-align: left; font-weight: bold;">Titan Heart</td>
-            <td style="text-align: center; color: #aaa;">Promethean</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">101</td>
-            <td style="text-align: left; font-weight: bold;">World Tree</td>
-            <td style="text-align: center; color: #aaa;">Chaos</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">102</td>
-            <td style="text-align: left; font-weight: bold;">Atlantis</td>
-            <td style="text-align: center; color: #aaa;">Chaos</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">103</td>
-            <td style="text-align: left; font-weight: bold;">The Big Bang</td>
-            <td style="text-align: center; color: #aaa;">Chaos</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">104</td>
-            <td style="text-align: left; font-weight: bold;">Wizard Hat</td>
-            <td style="text-align: center; color: #aaa;">Arcane</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">105</td>
-            <td style="text-align: left; font-weight: bold;">Broomstick</td>
-            <td style="text-align: center; color: #aaa;">Arcane</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">106</td>
-            <td style="text-align: left; font-weight: bold;">Witch Cauldron</td>
-            <td style="text-align: center; color: #aaa;">Arcane</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">107</td>
-            <td style="text-align: left; font-weight: bold;">Basilisk Fang</td>
-            <td style="text-align: center; color: #aaa;">Arcane</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">108</td>
-            <td style="text-align: left; font-weight: bold;">Moon Amulet</td>
-            <td style="text-align: center; color: #aaa;">Arcane</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">109</td>
-            <td style="text-align: left; font-weight: bold;">Phoenix Feather</td>
-            <td style="text-align: center; color: #aaa;">Runic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">110</td>
-            <td style="text-align: left; font-weight: bold;">Portal Key</td>
-            <td style="text-align: center; color: #aaa;">Runic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">111</td>
-            <td style="text-align: left; font-weight: bold;">Shadow Sword</td>
-            <td style="text-align: center; color: #aaa;">Runic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">112</td>
-            <td style="text-align: left; font-weight: bold;">Mimic Chest</td>
-            <td style="text-align: center; color: #aaa;">Runic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">113</td>
-            <td style="text-align: left; font-weight: bold;">Enchanted Anvil</td>
-            <td style="text-align: center; color: #aaa;">Mystic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">114</td>
-            <td style="text-align: left; font-weight: bold;">Griffin Egg</td>
-            <td style="text-align: center; color: #aaa;">Mystic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">115</td>
-            <td style="text-align: left; font-weight: bold;">Magic Staff</td>
-            <td style="text-align: center; color: #aaa;">Mystic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">116</td>
-            <td style="text-align: left; font-weight: bold;">Monolith</td>
-            <td style="text-align: center; color: #aaa;">Mystic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">117</td>
-            <td style="text-align: left; font-weight: bold;">Philosopher's Stone</td>
-            <td style="text-align: center; color: #aaa;">Infernal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">118</td>
-            <td style="text-align: left; font-weight: bold;">Sundial</td>
-            <td style="text-align: center; color: #aaa;">Infernal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">119</td>
-            <td style="text-align: left; font-weight: bold;">Crystal Ball</td>
-            <td style="text-align: center; color: #aaa;">Infernal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">120</td>
-            <td style="text-align: left; font-weight: bold;">Rune Stone</td>
-            <td style="text-align: center; color: #aaa;">Infernal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">121</td>
-            <td style="text-align: left; font-weight: bold;">Moon Throne</td>
-            <td style="text-align: center; color: #aaa;">Fey</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">122</td>
-            <td style="text-align: left; font-weight: bold;">Shadow Orb</td>
-            <td style="text-align: center; color: #aaa;">Fey</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">123</td>
-            <td style="text-align: left; font-weight: bold;">Forgotten Ruins</td>
-            <td style="text-align: center; color: #aaa;">Fey</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">124</td>
-            <td style="text-align: left; font-weight: bold;">Star Altar</td>
-            <td style="text-align: center; color: #aaa;">Fey</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">125</td>
-            <td style="text-align: left; font-weight: bold;">Oracle Orb</td>
-            <td style="text-align: center; color: #aaa;">Draconic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">126</td>
-            <td style="text-align: left; font-weight: bold;">Forbidden Tome</td>
-            <td style="text-align: center; color: #aaa;">Draconic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">127</td>
-            <td style="text-align: left; font-weight: bold;">Moonwell</td>
-            <td style="text-align: center; color: #aaa;">Draconic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">128</td>
-            <td style="text-align: left; font-weight: bold;">Haunted Manor</td>
-            <td style="text-align: center; color: #aaa;">Draconic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">129</td>
-            <td style="text-align: left; font-weight: bold;">Void Eye</td>
-            <td style="text-align: center; color: #aaa;">Fabled</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">130</td>
-            <td style="text-align: left; font-weight: bold;">Void Rift</td>
-            <td style="text-align: center; color: #aaa;">Fabled</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">131</td>
-            <td style="text-align: left; font-weight: bold;">Clock Tower</td>
-            <td style="text-align: center; color: #aaa;">Exalted</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">132</td>
-            <td style="text-align: left; font-weight: bold;">Cloud Palace</td>
-            <td style="text-align: center; color: #aaa;">Exalted</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">133</td>
-            <td style="text-align: left; font-weight: bold;">Dragon Mountain</td>
-            <td style="text-align: center; color: #aaa;">Relic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">134</td>
-            <td style="text-align: left; font-weight: bold;">Alchemist Table</td>
-            <td style="text-align: center; color: #aaa;">Awakened</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">135</td>
-            <td style="text-align: left; font-weight: bold;">Ghost Ship</td>
-            <td style="text-align: center; color: #aaa;">Awakened</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">136</td>
-            <td style="text-align: left; font-weight: bold;">Realm Gate</td>
-            <td style="text-align: center; color: #aaa;">Unbound</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">137</td>
-            <td style="text-align: left; font-weight: bold;">Phantom Fortress</td>
-            <td style="text-align: center; color: #aaa;">Unbound</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">138</td>
-            <td style="text-align: left; font-weight: bold;">Sky Castle</td>
-            <td style="text-align: center; color: #aaa;">Mythos</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">139</td>
-            <td style="text-align: left; font-weight: bold;">Gearbox</td>
-            <td style="text-align: center; color: #aaa;">Kinetic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">140</td>
-            <td style="text-align: left; font-weight: bold;">Engineer Goggles</td>
-            <td style="text-align: center; color: #aaa;">Kinetic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">141</td>
-            <td style="text-align: left; font-weight: bold;">Barometer</td>
-            <td style="text-align: center; color: #aaa;">Kinetic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">142</td>
-            <td style="text-align: left; font-weight: bold;">Gramophone</td>
-            <td style="text-align: center; color: #aaa;">Kinetic</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">143</td>
-            <td style="text-align: left; font-weight: bold;">Piston Machine</td>
-            <td style="text-align: center; color: #aaa;">Forged</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">144</td>
-            <td style="text-align: left; font-weight: bold;">Pressure Canister</td>
-            <td style="text-align: center; color: #aaa;">Forged</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">145</td>
-            <td style="text-align: left; font-weight: bold;">Pneumatic Hammer</td>
-            <td style="text-align: center; color: #aaa;">Forged</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">146</td>
-            <td style="text-align: left; font-weight: bold;">Telegraph Machine</td>
-            <td style="text-align: center; color: #aaa;">Gilded</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">147</td>
-            <td style="text-align: left; font-weight: bold;">Pocketwatch</td>
-            <td style="text-align: center; color: #aaa;">Gilded</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">148</td>
-            <td style="text-align: left; font-weight: bold;">Globe</td>
-            <td style="text-align: center; color: #aaa;">Gilded</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">149</td>
-            <td style="text-align: left; font-weight: bold;">Steam Drill</td>
-            <td style="text-align: center; color: #aaa;">Victorian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">150</td>
-            <td style="text-align: left; font-weight: bold;">Hydraulic Press</td>
-            <td style="text-align: center; color: #aaa;">Victorian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">151</td>
-            <td style="text-align: left; font-weight: bold;">Diving Bell</td>
-            <td style="text-align: center; color: #aaa;">Victorian</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">152</td>
-            <td style="text-align: left; font-weight: bold;">Steam Cannon</td>
-            <td style="text-align: center; color: #aaa;">Regal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">153</td>
-            <td style="text-align: left; font-weight: bold;">Lighthouse</td>
-            <td style="text-align: center; color: #aaa;">Regal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">154</td>
-            <td style="text-align: left; font-weight: bold;">Tesla Coil</td>
-            <td style="text-align: center; color: #aaa;">Epochal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">155</td>
-            <td style="text-align: left; font-weight: bold;">Jetpack</td>
-            <td style="text-align: center; color: #aaa;">Impossible</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">156</td>
-            <td style="text-align: left; font-weight: bold;">Turbine</td>
-            <td style="text-align: center; color: #aaa;">Perpetual</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">157</td>
-            <td style="text-align: left; font-weight: bold;">Hot Air Balloon</td>
-            <td style="text-align: center; color: #aaa;">Perpetual</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">158</td>
-            <td style="text-align: left; font-weight: bold;">Perpetual Engine</td>
-            <td style="text-align: center; color: #aaa;">Colossal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">159</td>
-            <td style="text-align: left; font-weight: bold;">Factory</td>
-            <td style="text-align: center; color: #aaa;">Deus</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">160</td>
-            <td style="text-align: left; font-weight: bold;">Airship</td>
-            <td style="text-align: center; color: #aaa;">Deus</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">161</td>
-            <td style="text-align: left; font-weight: bold;">Citadel</td>
-            <td style="text-align: center; color: #aaa;">Chronal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">162</td>
-            <td style="text-align: left; font-weight: bold;">Solar Galleon</td>
-            <td style="text-align: center; color: #aaa;">Chronal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">163</td>
-            <td style="text-align: left; font-weight: bold;">Nautilus</td>
-            <td style="text-align: center; color: #aaa;">Chronal</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">164</td>
-            <td style="text-align: left; font-weight: bold;">Training Dummy</td>
-            <td style="text-align: center; color: #aaa;">Carved</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">165</td>
-            <td style="text-align: left; font-weight: bold;">Golden Fan</td>
-            <td style="text-align: center; color: #aaa;">Carved</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">166</td>
-            <td style="text-align: left; font-weight: bold;">Bonsai Tree</td>
-            <td style="text-align: center; color: #aaa;">Carved</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">167</td>
-            <td style="text-align: left; font-weight: bold;">Lucky Medallion</td>
-            <td style="text-align: center; color: #aaa;">Carved</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">168</td>
-            <td style="text-align: left; font-weight: bold;">War Drum</td>
-            <td style="text-align: center; color: #aaa;">Honed</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">169</td>
-            <td style="text-align: left; font-weight: bold;">Shuriken</td>
-            <td style="text-align: center; color: #aaa;">Honed</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">170</td>
-            <td style="text-align: left; font-weight: bold;">Stone Lantern</td>
-            <td style="text-align: center; color: #aaa;">Honed</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">171</td>
-            <td style="text-align: left; font-weight: bold;">Katana</td>
-            <td style="text-align: center; color: #aaa;">Tempered</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">172</td>
-            <td style="text-align: left; font-weight: bold;">Emperor Crown</td>
-            <td style="text-align: center; color: #aaa;">Tempered</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">173</td>
-            <td style="text-align: left; font-weight: bold;">Sacred Vase</td>
-            <td style="text-align: center; color: #aaa;">Tempered</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">174</td>
-            <td style="text-align: left; font-weight: bold;">Oni Mask</td>
-            <td style="text-align: center; color: #aaa;">Yokai</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">175</td>
-            <td style="text-align: left; font-weight: bold;">Oni Hammer</td>
-            <td style="text-align: center; color: #aaa;">Yokai</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">176</td>
-            <td style="text-align: left; font-weight: bold;">Torii Gate</td>
-            <td style="text-align: center; color: #aaa;">Veiled</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">177</td>
-            <td style="text-align: left; font-weight: bold;">Imperial Throne</td>
-            <td style="text-align: center; color: #aaa;">Veiled</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">178</td>
-            <td style="text-align: left; font-weight: bold;">Dojo</td>
-            <td style="text-align: center; color: #aaa;">Hallowed</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">179</td>
-            <td style="text-align: left; font-weight: bold;">Great Pagoda</td>
-            <td style="text-align: center; color: #aaa;">Hallowed</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">180</td>
-            <td style="text-align: left; font-weight: bold;">Dragon Temple</td>
-            <td style="text-align: center; color: #aaa;">Imperial</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">181</td>
-            <td style="text-align: left; font-weight: bold;">Imperial Seal</td>
-            <td style="text-align: center; color: #aaa;">Imperial</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">182</td>
-            <td style="text-align: left; font-weight: bold;">Sun Palace</td>
-            <td style="text-align: center; color: #aaa;">Sovereign</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">183</td>
-            <td style="text-align: left; font-weight: bold;">Mount Fuji</td>
-            <td style="text-align: center; color: #aaa;">Amatsu</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center;">4</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">184</td>
-            <td style="text-align: left; font-weight: bold;">Dragon Blade</td>
-            <td style="text-align: center; color: #aaa;">Kami</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center;">0</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">185</td>
-            <td style="text-align: left; font-weight: bold;">Temple Key</td>
-            <td style="text-align: center; color: #aaa;">Kami</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center;">0</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">186</td>
-            <td style="text-align: left; font-weight: bold;">Yata Mirror</td>
-            <td style="text-align: center; color: #aaa;">Onmyo</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center;">0</td>
-            <td style="text-align: center; color: #28a745;">已收集</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">187</td>
-            <td style="text-align: left; font-weight: bold;">Oni Warship</td>
-            <td style="text-align: center; color: #aaa;">Onmyo</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center;">0</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-        </tr>
-        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-            <td style="text-align: center;">188</td>
-            <td style="text-align: left; font-weight: bold;">Dragon Pearl</td>
-            <td style="text-align: center; color: #aaa;">Izanami</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center;">0</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-            <td style="text-align: center; color: #dc3545;">未收集</td>
-        </tr>
-    </tbody>
-</table>
-</div>
+        <!-- Metrics Dashboard -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400">物品總數</p>
+                        <h3 id="stat-total" class="text-2xl font-bold text-white mt-1 font-mono">0</h3>
+                    </div>
+                    <div class="p-2 bg-slate-800 text-slate-300 rounded-lg">📦</div>
+                </div>
+            </div>
 
-		<!-- Four: 下載或追蹤紀錄 -->
-			<section id="four" class="main style2 special">
-				<div class="container">
-					<header class="major">
-						<h2>持續更新與數據追蹤</h2>
-					</header>
-					<p>更多 Roblox 遊戲攻略與掛機優化設定持續整理中。</p>
-					<ul class="actions special">
-						<li><a href="#one" class="button wide primary scrolly">回到頂部</a></li>
-						<li><a href="https://www.roblox.com/" target="_blank" class="button wide">進入 Roblox</a></li>
-					</ul>
-				</div>
-			</section>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400">已完全收集 (4/4)</p>
+                        <h3 id="stat-completed" class="text-2xl font-bold text-emerald-400 mt-1 font-mono">0</h3>
+                    </div>
+                    <div class="p-2 bg-emerald-950/60 text-emerald-400 rounded-lg border border-emerald-800/40">✅</div>
+                </div>
+            </div>
 
-		<!-- Footer -->
-			<section id="footer">
-				<ul class="icons">
-					<li><a href="#" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
-				</ul>
-				<ul class="copyright">
-					<li>&copy; Jacky. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-				</ul>
-			</section>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400">未完全收集</p>
+                        <h3 id="stat-incomplete" class="text-2xl font-bold text-rose-400 mt-1 font-mono">0</h3>
+                    </div>
+                    <div class="p-2 bg-rose-950/60 text-rose-400 rounded-lg border border-rose-800/40">⚠️</div>
+                </div>
+            </div>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-slate-400">目前顯示數量</p>
+                        <h3 id="stat-showing" class="text-2xl font-bold text-cyan-400 mt-1 font-mono">0</h3>
+                    </div>
+                    <div class="p-2 bg-cyan-950/60 text-cyan-400 rounded-lg border border-cyan-800/40">🔍</div>
+                </div>
+            </div>
+        </div>
 
-	</body>
+        <!-- Filter Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 shadow-md flex flex-col md:flex-row gap-4 justify-between items-center">
+            <!-- Search Box -->
+            <div class="relative w-full md:w-96">
+                <input type="text" id="search-input" placeholder="搜尋物品名稱或分類..." 
+                    class="w-full bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-xl px-4 py-2.5 pl-10 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition">
+                <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+
+            <!-- Filters Group -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                <!-- Category Select -->
+                <select id="category-filter" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition">
+                    <option value="ALL">全部分類 (All Categories)</option>
+                </select>
+
+                <!-- Status Filter Buttons -->
+                <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-medium">
+                    <button class="status-btn active px-3 py-1.5 rounded-lg text-slate-300 transition" data-status="ALL">全部</button>
+                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="COMPLETE">已完成</button>
+                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="INCOMPLETE">未完成</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Container -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-950/90 text-slate-400 uppercase text-xs font-semibold border-b border-slate-800 tracking-wider">
+                        <tr>
+                            <th class="py-4 px-6 text-center w-20">編號</th>
+                            <th class="py-4 px-6">物品名稱</th>
+                            <th class="py-4 px-6 text-center">分類 (Rarity/Type)</th>
+                            <th class="py-4 px-6 text-center text-cyan-400">Astral</th>
+                            <th class="py-4 px-6 text-center text-cyan-300">Astral Count</th>
+                            <th class="py-4 px-6 text-center text-purple-400">Divine</th>
+                            <th class="py-4 px-6 text-center text-amber-400">Void</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-table-body" class="divide-y divide-slate-800/60 font-medium">
+                        <!-- Dynamic Content Rendered via JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden py-16 text-center">
+                <p class="text-4xl mb-3">🔍</p>
+                <p class="text-slate-400 text-base">找不到符合條件的物品</p>
+                <p class="text-slate-600 text-xs mt-1">請嘗試變更搜尋關鍵字或篩選條件</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Item Dataset (Auto generated & parsed from your collection screenshots)
+        const RAW_DATA = [
+            { id: 1, name: "Soccer Ball", category: "Common", astral: true, count: 4, divine: true, void: true },
+            { id: 2, name: "Traffic Cone", category: "Common", astral: true, count: 4, divine: true, void: true },
+            { id: 3, name: "Rubber Duck", category: "Common", astral: true, count: 4, divine: true, void: true },
+            { id: 4, name: "Alarm Clock", category: "Common", astral: true, count: 4, divine: true, void: true },
+            { id: 5, name: "Apple", category: "Common", astral: true, count: 4, divine: true, void: true },
+            { id: 6, name: "Gold Bar", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
+            
+            // Items 89 to 188 from screenshot series
+            { id: 89, name: "Light Engine", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+            { id: 90, name: "Creation Throne", category: "Angelic", astral: true, count: 4, divine: true, void: true },
+            { id: 91, name: "Floating Island", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+            { id: 92, name: "Dream Universe", category: "Godlike", astral: true, count: 4, divine: true, void: true },
+            { id: 93, name: "Theseus Ship", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
+            { id: 94, name: "Omphalos Stone", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
+            { id: 95, name: "Trojan Horse", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
+            { id: 96, name: "Cyclops' Forge", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
+            { id: 97, name: "Tartarus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+            { id: 98, name: "Mount Olympus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
+            { id: 99, name: "Pandora's Box", category: "Promethean", astral: true, count: 4, divine: true, void: true },
+            { id: 100, name: "Titan Heart", category: "Promethean", astral: true, count: 4, divine: true, void: true },
+            { id: 101, name: "World Tree", category: "Chaos", astral: true, count: 4, divine: true, void: true },
+            { id: 102, name: "Atlantis", category: "Chaos", astral: true, count: 4, divine: true, void: true },
+            { id: 103, name: "The Big Bang", category: "Chaos", astral: true, count: 4, divine: true, void: true },
+            { id: 104, name: "Wizard Hat", category: "Arcane", astral: true, count: 4, divine: true, void: true },
+            { id: 105, name: "Broomstick", category: "Arcane", astral: true, count: 4, divine: true, void: true },
+            { id: 106, name: "Witch Cauldron", category: "Arcane", astral: true, count: 4, divine: true, void: true },
+            { id: 107, name: "Basilisk Fang", category: "Arcane", astral: true, count: 4, divine: true, void: true },
+            { id: 108, name: "Moon Amulet", category: "Arcane", astral: true, count: 4, divine: true, void: true },
+            { id: 109, name: "Phoenix Feather", category: "Runic", astral: true, count: 4, divine: true, void: true },
+            { id: 110, name: "Portal Key", category: "Runic", astral: true, count: 4, divine: true, void: true },
+            { id: 111, name: "Shadow Sword", category: "Runic", astral: true, count: 4, divine: true, void: true },
+            { id: 112, name: "Mimic Chest", category: "Runic", astral: true, count: 4, divine: true, void: true },
+            { id: 113, name: "Enchanted Anvil", category: "Mystic", astral: true, count: 4, divine: true, void: true },
+            { id: 114, name: "Griffin Egg", category: "Mystic", astral: true, count: 4, divine: true, void: true },
+            { id: 115, name: "Magic Staff", category: "Mystic", astral: true, count: 4, divine: true, void: true },
+            { id: 116, name: "Monolith", category: "Mystic", astral: true, count: 4, divine: true, void: true },
+            { id: 117, name: "Philosopher's Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
+            { id: 118, name: "Sundial", category: "Infernal", astral: true, count: 4, divine: true, void: true },
+            { id: 119, name: "Crystal Ball", category: "Infernal", astral: true, count: 4, divine: true, void: true },
+            { id: 120, name: "Rune Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
+            { id: 121, name: "Moon Throne", category: "Fey", astral: true, count: 4, divine: true, void: true },
+            { id: 122, name: "Shadow Orb", category: "Fey", astral: true, count: 4, divine: true, void: true },
+            { id: 123, name: "Forgotten Ruins", category: "Fey", astral: true, count: 4, divine: true, void: true },
+            { id: 124, name: "Star Altar", category: "Fey", astral: true, count: 4, divine: true, void: true },
+            { id: 125, name: "Oracle Orb", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+            { id: 126, name: "Forbidden Tome", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+            { id: 127, name: "Moonwell", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+            { id: 128, name: "Haunted Manor", category: "Draconic", astral: true, count: 4, divine: true, void: true },
+            { id: 129, name: "Void Eye", category: "Fabled", astral: true, count: 4, divine: true, void: true },
+            { id: 130, name: "Void Rift", category: "Fabled", astral: true, count: 4, divine: true, void: true },
+            { id: 131, name: "Clock Tower", category: "Exalted", astral: true, count: 4, divine: true, void: true },
+            { id: 132, name: "Cloud Palace", category: "Exalted", astral: true, count: 4, divine: true, void: true },
+            { id: 133, name: "Dragon Mountain", category: "Relic", astral: true, count: 4, divine: true, void: true },
+            { id: 134, name: "Alchemist Table", category: "Awakened", astral: true, count: 4, divine: true, void: true },
+            { id: 135, name: "Ghost Ship", category: "Awakened", astral: true, count: 4, divine: true, void: true },
+            { id: 136, name: "Realm Gate", category: "Unbound", astral: true, count: 4, divine: true, void: true },
+            { id: 137, name: "Phantom Fortress", category: "Unbound", astral: true, count: 4, divine: true, void: true },
+            { id: 138, name: "Sky Castle", category: "Mythos", astral: true, count: 4, divine: true, void: true },
+            { id: 139, name: "Gearbox", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
+            { id: 140, name: "Engineer Goggles", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
+            { id: 141, name: "Barometer", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
+            { id: 142, name: "Gramophone", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
+            { id: 143, name: "Piston Machine", category: "Forged", astral: true, count: 4, divine: true, void: true },
+            { id: 144, name: "Pressure Canister", category: "Forged", astral: true, count: 4, divine: true, void: true },
+            { id: 145, name: "Pneumatic Hammer", category: "Forged", astral: true, count: 4, divine: true, void: true },
+            { id: 146, name: "Telegraph Machine", category: "Gilded", astral: true, count: 4, divine: true, void: true },
+            { id: 147, name: "Pocketwatch", category: "Gilded", astral: true, count: 4, divine: true, void: true },
+            { id: 148, name: "Globe", category: "Gilded", astral: true, count: 4, divine: true, void: true },
+            { id: 149, name: "Steam Drill", category: "Victorian", astral: true, count: 4, divine: true, void: true },
+            { id: 150, name: "Hydraulic Press", category: "Victorian", astral: true, count: 4, divine: true, void: true },
+            { id: 151, name: "Diving Bell", category: "Victorian", astral: true, count: 4, divine: true, void: true },
+            { id: 152, name: "Steam Cannon", category: "Regal", astral: true, count: 4, divine: true, void: true },
+            { id: 153, name: "Lighthouse", category: "Regal", astral: true, count: 4, divine: true, void: true },
+            { id: 154, name: "Tesla Coil", category: "Epochal", astral: true, count: 4, divine: true, void: true },
+            { id: 155, name: "Jetpack", category: "Impossible", astral: true, count: 4, divine: true, void: true },
+            { id: 156, name: "Turbine", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
+            { id: 157, name: "Hot Air Balloon", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
+            { id: 158, name: "Perpetual Engine", category: "Colossal", astral: true, count: 4, divine: true, void: true },
+            { id: 159, name: "Factory", category: "Deus", astral: true, count: 4, divine: true, void: true },
+            { id: 160, name: "Airship", category: "Deus", astral: true, count: 4, divine: true, void: true },
+            { id: 161, name: "Citadel", category: "Chronal", astral: true, count: 4, divine: true, void: true },
+            { id: 162, name: "Solar Galleon", category: "Chronal", astral: true, count: 4, divine: true, void: true },
+            { id: 163, name: "Nautilus", category: "Chronal", astral: true, count: 4, divine: true, void: true },
+            { id: 164, name: "Training Dummy", category: "Carved", astral: true, count: 4, divine: true, void: true },
+            { id: 165, name: "Golden Fan", category: "Carved", astral: true, count: 4, divine: true, void: true },
+            { id: 166, name: "Bonsai Tree", category: "Carved", astral: true, count: 4, divine: true, void: true },
+            { id: 167, name: "Lucky Medallion", category: "Carved", astral: true, count: 4, divine: true, void: true },
+            { id: 168, name: "War Drum", category: "Honed", astral: true, count: 4, divine: true, void: true },
+            { id: 169, name: "Shuriken", category: "Honed", astral: true, count: 4, divine: true, void: true },
+            { id: 170, name: "Stone Lantern", category: "Honed", astral: true, count: 4, divine: true, void: true },
+            { id: 171, name: "Katana", category: "Tempered", astral: true, count: 4, divine: true, void: true },
+            { id: 172, name: "Emperor Crown", category: "Tempered", astral: true, count: 4, divine: true, void: true },
+            { id: 173, name: "Sacred Vase", category: "Tempered", astral: true, count: 4, divine: true, void: true },
+            { id: 174, name: "Oni Mask", category: "Yokai", astral: true, count: 4, divine: true, void: true },
+            { id: 175, name: "Oni Hammer", category: "Yokai", astral: true, count: 4, divine: true, void: true },
+            { id: 176, name: "Torii Gate", category: "Veiled", astral: true, count: 4, divine: true, void: true },
+            { id: 177, name: "Imperial Throne", category: "Veiled", astral: true, count: 4, divine: true, void: true },
+            { id: 178, name: "Dojo", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
+            { id: 179, name: "Great Pagoda", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
+            { id: 180, name: "Dragon Temple", category: "Imperial", astral: true, count: 4, divine: true, void: true },
+            { id: 181, name: "Imperial Seal", category: "Imperial", astral: true, count: 4, divine: true, void: true },
+            { id: 182, name: "Sun Palace", category: "Sovereign", astral: true, count: 4, divine: true, void: true },
+            { id: 183, name: "Mount Fuji", category: "Amatsu", astral: true, count: 4, divine: true, void: true },
+            { id: 184, name: "Dragon Blade", category: "Kami", astral: false, count: 0, divine: false, void: false },
+            { id: 185, name: "Temple Key", category: "Kami", astral: false, count: 0, divine: false, void: false },
+            { id: 186, name: "Yata Mirror", category: "Onmyo", astral: false, count: 0, divine: true, void: false },
+            { id: 187, name: "Oni Warship", category: "Onmyo", astral: false, count: 0, divine: false, void: false },
+            { id: 188, name: "Dragon Pearl", category: "Izanami", astral: false, count: 0, divine: false, void: false },
+        ];
+
+        // Global State Filters
+        let currentSearch = "";
+        let currentCategory = "ALL";
+        let currentStatusFilter = "ALL";
+
+        // Initialize App
+        document.addEventListener("DOMContentLoaded", () => {
+            populateCategories();
+            calculateGlobalStats();
+            renderTable();
+
+            // Setup Event Listeners
+            document.getElementById("search-input").addEventListener("input", (e) => {
+                currentSearch = e.target.value.trim().toLowerCase();
+                renderTable();
+            });
+
+            document.getElementById("category-filter").addEventListener("change", (e) => {
+                currentCategory = e.target.value;
+                renderTable();
+            });
+
+            document.querySelectorAll(".status-btn").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll(".status-btn").forEach(b => {
+                        b.classList.remove("active", "bg-slate-800", "text-cyan-400");
+                        b.classList.add("text-slate-400");
+                    });
+                    
+                    btn.classList.add("active", "bg-slate-800", "text-cyan-400");
+                    btn.classList.remove("text-slate-400");
+                    
+                    currentStatusFilter = btn.dataset.status;
+                    renderTable();
+                });
+            });
+        });
+
+        function populateCategories() {
+            const categories = Array.from(new Set(RAW_DATA.map(item => item.category)));
+            const select = document.getElementById("category-filter");
+            categories.forEach(cat => {
+                const opt = document.createElement("option");
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        function isItemComplete(item) {
+            return item.astral && item.count === 4 && item.divine && item.void;
+        }
+
+        function calculateGlobalStats() {
+            const total = RAW_DATA.length;
+            const completedCount = RAW_DATA.filter(isItemComplete).length;
+            const progressPct = Math.round((completedCount / total) * 100);
+
+            document.getElementById("stat-total").textContent = total;
+            document.getElementById("stat-completed").textContent = completedCount;
+            document.getElementById("stat-incomplete").textContent = total - completedCount;
+            
+            document.getElementById("global-progress-text").textContent = `${progressPct}%`;
+            document.getElementById("global-progress-bar").style.width = `${progressPct}%`;
+        }
+
+        function getStatusBadge(isCollected) {
+            if (isCollected) {
+                return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 glow-green">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>已收集
+                </span>`;
+            } else {
+                return `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-950/50 text-rose-400 border border-rose-900/40 opacity-75">
+                    未收集
+                </span>`;
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("items-table-body");
+            const emptyState = document.getElementById("empty-state");
+            tbody.innerHTML = "";
+
+            const filtered = RAW_DATA.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(currentSearch) || 
+                                    item.category.toLowerCase().includes(currentSearch) ||
+                                    item.id.toString().includes(currentSearch);
+                
+                const matchCategory = currentCategory === "ALL" || item.category === currentCategory;
+                
+                const completed = isItemComplete(item);
+                let matchStatus = true;
+                if (currentStatusFilter === "COMPLETE") matchStatus = completed;
+                if (currentStatusFilter === "INCOMPLETE") matchStatus = !completed;
+
+                return matchSearch && matchCategory && matchStatus;
+            });
+
+            document.getElementById("stat-showing").textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                emptyState.classList.add("hidden");
+            }
+
+            filtered.forEach((item, index) => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-800/40 transition duration-150 border-b border-slate-800/50";
+
+                tr.innerHTML = `
+                    <td class="py-3.5 px-6 text-center font-mono text-slate-500">${item.id}</td>
+                    <td class="py-3.5 px-6 font-bold text-slate-100 flex items-center gap-2">
+                        ${item.name}
+                    </td>
+                    <td class="py-3.5 px-6 text-center">
+                        <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-800 text-slate-400 border border-slate-700/60">
+                            ${item.category}
+                        </span>
+                    </td>
+                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.astral)}</td>
+                    <td class="py-3.5 px-6 text-center font-mono font-semibold ${item.count === 4 ? 'text-cyan-400' : 'text-slate-500'}">${item.count}</td>
+                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.divine)}</td>
+                    <td class="py-3.5 px-6 text-center">${getStatusBadge(item.void)}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
 </html>
