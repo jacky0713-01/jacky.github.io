@@ -64,60 +64,146 @@
 				</div>
 			</section>
 
-<!-- 硬幣變異統計表格區塊 -->
+<!-- Roblox Throw a Coin 完整物品與變異機率資料表 -->
 <header class="major">
-    <h2>硬幣變異收集統計表</h2>
+    <h2>物品與變異機率完整資料表</h2>
 </header>
-<p>記錄各等級變異硬幣的取得機率、倍率加成與當前解鎖狀態：</p>
+<p>收錄《Throw a Coin》遊戲中所有物品之稀有度、基本機率與變異數值（可上下滾動查看）：</p>
 
-<div class="table-wrapper">
-    <table>
-        <thead>
+<!-- 表格外容器：設定響應式與滾動條 -->
+<div class="table-wrapper" style="max-height: 500px; overflow-y: auto; border: 1px solid rgba(255, 255, 255, 0.15); borderRadius: 6px;">
+    <table style="margin-bottom: 0;">
+        <thead style="position: sticky; top: 0; background: #222629; z-index: 10;">
             <tr>
-                <th>稀有度 / 變異名稱</th>
-                <th>取得機率 (Rarity)</th>
-                <th>收益倍率 (Multiplier)</th>
-                <th>解鎖狀態</th>
+                <th style="width: 50px; text-align: center;">NO</th>
+                <th>Item Name</th>
+                <th>Rarity</th>
+                <th>Normal</th>
+                <th>Normal Chance</th>
+                <th>Unreal</th>
+                <th>Void</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>巨大 (HUGE)</td>
-                <td>1 / 10</td>
-                <td>x 2.0</td>
-                <td><span style="color: #28a745; font-weight: bold;">已解鎖</span></td>
+                <td style="text-align: center;">1</td>
+                <td>Penny</td>
+                <td>Common</td>
+                <td>1/1.25</td>
+                <td>1</td>
+                <td>1/12.5</td>
+                <td>1/1.25M</td>
             </tr>
             <tr>
-                <td>彩虹 (Rainbow)</td>
-                <td>1 / 500</td>
-                <td>x 10.0</td>
-                <td><span style="color: #28a745; font-weight: bold;">已解鎖</span></td>
+                <td style="text-align: center;">2</td>
+                <td>Traffic Cone</td>
+                <td>Common</td>
+                <td>1/1.67</td>
+                <td>1</td>
+                <td>1/16.7</td>
+                <td>1/1.67M</td>
             </tr>
             <tr>
-                <td><strong>Astral (星界)</strong></td>
-                <td>1 / 5,000</td>
-                <td>x 50.0</td>
-                <td><span style="color: #28a745; font-weight: bold;">已解鎖</span></td>
+                <td style="text-align: center;">3</td>
+                <td>Wooden Chair</td>
+                <td>Common</td>
+                <td>1/2.22</td>
+                <td>1</td>
+                <td>1/22.2</td>
+                <td>1/2.22M</td>
             </tr>
             <tr>
-                <td><strong>Divine (神聖)</strong></td>
-                <td>1 / 50,000</td>
-                <td>x 250.0</td>
-                <td><span style="color: #dc3545; font-weight: bold;">未解鎖</span></td>
+                <td style="text-align: center;">4</td>
+                <td>Alarm Clock</td>
+                <td>Common</td>
+                <td>1/3.03</td>
+                <td>1</td>
+                <td>1/30.3</td>
+                <td>1/3.03M</td>
             </tr>
             <tr>
-                <td><strong>Void (虛空)</strong></td>
-                <td>1 / 500,000</td>
-                <td>x 1,000.0</td>
-                <td><span style="color: #dc3545; font-weight: bold;">未解鎖</span></td>
+                <td style="text-align: center;">5</td>
+                <td>Apple</td>
+                <td>Common</td>
+                <td>1/4.17</td>
+                <td>1</td>
+                <td>1/41.7</td>
+                <td>1/4.17M</td>
             </tr>
+            <tr>
+                <td style="text-align: center;">6</td>
+                <td>Trash Can</td>
+                <td>Uncommon</td>
+                <td>1/5.88</td>
+                <td>1</td>
+                <td>1/58.8</td>
+                <td>1/5.88M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">7</td>
+                <td>Bowling Pin</td>
+                <td>Uncommon</td>
+                <td>1/8.33</td>
+                <td>1</td>
+                <td>1/83.3</td>
+                <td>1/8.33M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">8</td>
+                <td>TV</td>
+                <td>Uncommon</td>
+                <td>1/12.5</td>
+                <td>1</td>
+                <td>1/125</td>
+                <td>1/12.5M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">9</td>
+                <td>Toilet Paper</td>
+                <td>Uncommon</td>
+                <td>1/18.2</td>
+                <td>1</td>
+                <td>1/182</td>
+                <td>1/18.2M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">10</td>
+                <td>Basketball</td>
+                <td>Uncommon</td>
+                <td>1/26.3</td>
+                <td>1</td>
+                <td>1/263</td>
+                <td>1/26.3M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">11</td>
+                <td>Washing Machine</td>
+                <td>Rare</td>
+                <td>1/38.5</td>
+                <td>1</td>
+                <td>1/385</td>
+                <td>1/38.5M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">12</td>
+                <td>Shopping Cart</td>
+                <td>Rare</td>
+                <td>1/58.8</td>
+                <td>1</td>
+                <td>1/588</td>
+                <td>1/58.8M</td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">13</td>
+                <td>Guitar</td>
+                <td>Rare</td>
+                <td>1/90.9</td>
+                <td>1</td>
+                <td>1/909</td>
+                <td>1/90.9M</td>
+            </tr>
+            <!-- 可以照著上述格式繼續新增 14 ~ 150+ 的數據 -->
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="3"><strong>圖鑑總解鎖率</strong></td>
-                <td><strong>3 / 5 (60%)</strong></td>
-            </tr>
-        </tfoot>
     </table>
 </div>
 
