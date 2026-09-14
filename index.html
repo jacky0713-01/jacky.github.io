@@ -48,7 +48,6 @@
       font-weight: 800;
       letter-spacing: -0.01em;
       
-      /* 多重霓光漸變背景 */
       background: linear-gradient(
         120deg, 
         #818cf8 0%, 
@@ -61,20 +60,17 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       
-      /* 動態霓虹文字發光與流動動畫 */
       animation: titleGradientFlow 6s ease infinite, titleGlowPulse 2.5s ease-in-out infinite alternate;
       position: relative;
       display: inline-block;
     }
 
-    /* 漸變流動 */
     @keyframes titleGradientFlow {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* 脈衝發光 */
     @keyframes titleGlowPulse {
       0% {
         filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.4)) 
@@ -126,7 +122,7 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -197,6 +193,7 @@
       color: #fff;
     }
 
+    /* 管理員專屬元素隱藏與控制 */
     .admin-only {
       display: none;
     }
@@ -662,7 +659,8 @@
       <h1>新竹九降風清水疾風俠 Roblox Throw a Coin — Collection Index Tracker</h1>
     </div>
     <div class="auth-box">
-      <button id="trade-btn" class="btn btn-success" style="margin-right: 8px;">🤝 交易助手</button>
+      <!-- 🤝 交易助手設為 admin-only，管理員登入後才顯示 -->
+      <button id="trade-btn" class="btn btn-success admin-only" style="margin-right: 8px;">🤝 交易助手</button>
       <span id="auth-status" class="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
       <button id="auth-btn" class="btn">管理員登入</button>
     </div>
@@ -684,10 +682,6 @@
     <div class="stat-card">
       <div class="stat-title">Astral 總數量</div>
       <div id="stat-count-total" class="stat-value">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-title">👁️ 參觀人數統計</div>
-      <div id="stat-visits" class="stat-value" style="color: #38bdf8;">載入中...</div>
     </div>
   </div>
 
@@ -766,20 +760,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-
-    // 免費安全的參觀人數 API (自動累加並讀取)
-    fetch('https://api.countapi.xyz/hit/jacky0713-01.github.io/tac_tracker_visits')
-      .then(res => res.json())
-      .then(data => {
-        if(data && data.value) {
-          document.getElementById('stat-visits').innerText = data.value.toLocaleString();
-        } else {
-          document.getElementById('stat-visits').innerText = '1';
-        }
-      })
-      .catch(() => {
-        document.getElementById('stat-visits').innerText = '1';
-      });
 
     const defaultDatabase = {
       163: { name: "Nautilus", rarity: "Chronal" },
@@ -961,6 +941,7 @@
 
     // Modal 控制邏輯
     tradeBtn.onclick = () => {
+      if (!auth.currentUser) return;
       updateTradingText();
       tradeOverlay.classList.add("active");
     };
