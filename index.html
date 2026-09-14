@@ -598,7 +598,7 @@
 
     .trade-textarea {
       width: 100%;
-      height: 160px;
+      height: 220px;
       background: #0f172a;
       border: 1px solid var(--border-color);
       border-radius: 8px;
@@ -606,6 +606,7 @@
       font-family: monospace;
       padding: 12px;
       font-size: 0.9rem;
+      line-height: 1.5;
       resize: vertical;
       outline: none;
       margin-bottom: 16px;
@@ -696,7 +697,7 @@
         <button id="modal-close-btn" class="modal-close">&times;</button>
       </div>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
-        自動掃描您的圖鑑，將<strong>多餘 (Astral > 1)</strong> 的物品標註為 [H] Have，<strong>未獲得</strong>的物品標註為 [W] Want：
+        自動依據您的圖鑑生成 Discord 交易頻道的專屬格式：
       </p>
       <textarea id="trade-text-output" class="trade-textarea" readonly></textarea>
       <div style="display: flex; justify-content: flex-end; gap: 12px;">
@@ -774,7 +775,7 @@
     const btnViewTable = document.getElementById("btn-view-table");
     const btnViewCard = document.getElementById("btn-view-card");
 
-    // 交易助手控制 DOM
+    // 交易助手 DOM
     const tradeBtn = document.getElementById("trade-btn");
     const tradeOverlay = document.getElementById("trade-modal-overlay");
     const closeModalBtn = document.getElementById("modal-close-btn");
@@ -870,10 +871,10 @@
       updateTradingText();
     }
 
-    // 產生 Discord 交易對應格式文字
+    // 生成您指定的專屬 Discord 交易格式
     function updateTradingText() {
+      let lfList = [];
       let haveList = [];
-      let wantList = [];
 
       const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
 
@@ -881,26 +882,29 @@
         const item = itemsData[key];
         const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
 
-        // 多餘的數量 (Have)
-        if (item.astralCount > 1) {
-          const extra = item.astralCount - 1;
-          haveList.push(`${item.name} #${item.id} (x${extra})`);
+        // LF (Looking For / 未收集) - 顯示需要的種類 + "物品名稱"
+        if (!isUnlocked) {
+          // 預設提示為所需的類型 (如 Astral/Divine/Void)
+          lfList.push(`Astral/Divine/Void "${item.name}"`);
         }
 
-        // 尚未收集到的 (Want)
-        if (!isUnlocked) {
-          wantList.push(`${item.name} #${item.id}`);
+        // I have (擁有多餘數量的物品) - 顯示 Astral +"物品名稱"+數量
+        if (item.astralCount > 1) {
+          const extraCount = item.astralCount - 1;
+          haveList.push(`Astral "${item.name}" x${extraCount}`);
         }
       });
 
-      let tradeStr = `**[Throw a Coin Trade]**\n\n`;
-      tradeStr += `**[H] HAVE:**\n${haveList.length > 0 ? haveList.join(', ') : 'None'}\n\n`;
-      tradeStr += `**[W] WANT:**\n${wantList.length > 0 ? wantList.join(', ') : 'None'}`;
+      let tradeStr = `LF\n`;
+      tradeStr += lfList.length > 0 ? lfList.join('\n') : 'None';
+      tradeStr += `\n\nI have \n`;
+      tradeStr += haveList.length > 0 ? haveList.join('\n') : 'None';
+      tradeStr += `\n\nNo tradeback\nDM`;
 
       tradeTextOutput.value = tradeStr;
     }
 
-    // 交易 Modal 打開與關閉控制
+    // Modal 開關邏輯
     tradeBtn.onclick = () => {
       updateTradingText();
       tradeOverlay.classList.add("active");
@@ -923,7 +927,7 @@
       });
     };
 
-    // 視圖切換事件
+    // 視圖切換
     btnViewTable.onclick = () => {
       btnViewTable.classList.add("active");
       btnViewCard.classList.remove("active");
