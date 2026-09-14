@@ -3,110 +3,245 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roblox 188 物品收集圖鑑表格</title>
+  <title>Roblox 188 物品收集進度追蹤器 (專業版)</title>
   <style>
     :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --header-bg: #1f313f;
-      --text-color: #e0e0e0;
-      --border-color: #333333;
-      --accent-color: #bb86fc;
-      --collected-bg: #1a2a22;
-      --collected-text: #03dac6;
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --header-bg: #0f172a;
+      --table-header-bg: #1e293b;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --success-text: #34d399;
+      --success-border: #10b981;
+      --gold-glow: #fbbf24;
     }
+
+    * { box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background-color: var(--bg-color);
-      color: var(--text-color);
+      color: var(--text-main);
       margin: 0;
-      padding: 20px;
+      padding: 24px;
     }
 
+    /* 頂部導覽列 */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 16px;
     }
 
-    h1 { margin: 0; font-size: 1.5rem; }
+    .title-group h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #818cf8, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
     .auth-box {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: #2c2c2c;
+      gap: 12px;
+      background: var(--card-bg);
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .auth-status {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
       padding: 8px 16px;
       border-radius: 8px;
-    }
-
-    button {
-      background-color: var(--accent-color);
-      color: #000;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s;
     }
 
-    button:hover { opacity: 0.9; }
+    .btn:hover { background-color: var(--accent-hover); }
+    .btn-danger { background-color: #ef4444; }
+    .btn-danger:hover { background-color: #dc2626; }
 
-    /* 表格樣式 */
+    /* 統計儀表板 */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .stat-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* 搜尋與篩選工具列 */
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-input, .select-input {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .search-input { flex: 1; min-width: 200px; }
+    .search-input:focus, .select-input:focus {
+      border-color: var(--accent);
+    }
+
+    /* 表格容器與樣式 */
     .table-container {
       overflow-x: auto;
       background-color: var(--card-bg);
-      border-radius: 8px;
+      border-radius: 12px;
       border: 1px solid var(--border-color);
+      max-height: 75vh;
     }
 
     table {
       width: 100%;
-      border-collapse: collapse;
-      text-align: center;
-    }
-
-    th, td {
-      padding: 10px 14px;
-      border: 1px solid var(--border-color);
-      font-size: 0.95rem;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: left;
     }
 
     th {
-      background-color: var(--header-bg);
-      color: #ffffff;
-      font-weight: bold;
+      position: sticky;
+      top: 0;
+      background-color: #1e293b;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 10;
     }
 
-    tr:nth-child(even) {
-      background-color: #181818;
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.95rem;
+      color: var(--text-main);
     }
 
-    /* 狀態與互動樣式 */
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* 稀有度標籤顏色 */
+    .rarity-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+    .rarity-Imperial { color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
+    .rarity-Hallowed { color: #ec4899; background: rgba(236, 72, 153, 0.15); }
+    .rarity-Veiled { color: #a855f7; background: rgba(168, 85, 247, 0.15); }
+    .rarity-Yokai { color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+
+    /* 狀態按鈕與互動 */
     .status-cell {
+      text-align: center;
       cursor: pointer;
       user-select: none;
-      transition: background-color 0.2s;
     }
 
-    .status-cell.collected {
-      background-color: var(--collected-bg);
-      color: var(--collected-text);
-      font-weight: bold;
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
     }
 
-    .count-cell {
+    .badge-empty {
+      color: #475569;
+    }
+
+    .badge-collected {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+    }
+
+    .count-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .count-btn {
+      background: #334155;
+      color: #fff;
+      border: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
       cursor: pointer;
+      display: none;
       font-weight: bold;
+      line-height: 1;
     }
 
-    /* 唯讀模式控制：未登入時禁止編輯表格 */
+    body:not(.read-only) .count-box:hover .count-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     body.read-only .status-cell,
-    body.read-only .count-cell {
+    body.read-only .count-box {
       pointer-events: none;
     }
   </style>
@@ -114,39 +249,64 @@
 <body class="read-only">
 
   <header>
-    <h1>Roblox 188 物品收集圖鑑</h1>
+    <div class="title-group">
+      <h1>Roblox 188 物品進度圖鑑</h1>
+    </div>
     <div class="auth-box">
-      <span id="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
-      <button id="auth-btn">管理員登入</button>
+      <span id="auth-status" class="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
+      <button id="auth-btn" class="btn">管理員登入</button>
     </div>
   </header>
+
+  <!-- 數據統計儀表板 -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <div class="stat-title">Astral 收集進度</div>
+      <div id="stat-astral" class="stat-value">0 / 188 (0%)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Divine 收集進度</div>
+      <div id="stat-divine" class="stat-value">0 / 188 (0%)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Void 收集進度</div>
+      <div id="stat-void" class="stat-value">0 / 188 (0%)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Astral 總數量</div>
+      <div id="stat-count-total" class="stat-value">0</div>
+    </div>
+  </div>
+
+  <!-- 搜尋工具列 -->
+  <div class="toolbar">
+    <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (如: 163 或 Nautilus)...">
+  </div>
 
   <div class="table-container">
     <table>
       <thead>
         <tr>
-          <th>編號</th>
+          <th style="width: 80px;">編號</th>
           <th>物品名稱</th>
-          <th>稀有度</th>
-          <th>Astral</th>
-          <th>Astral Count</th>
-          <th>Divine</th>
-          <th>Void</th>
+          <th style="width: 140px;">稀有度</th>
+          <th style="width: 130px; text-align: center;">Astral</th>
+          <th style="width: 140px; text-align: center;">Astral Count</th>
+          <th style="width: 130px; text-align: center;">Divine</th>
+          <th style="width: 130px; text-align: center;">Void</th>
         </tr>
       </thead>
       <tbody id="table-body">
-        <!-- 資料由 JS 動態生成 -->
+        <!-- JS 動態渲染 -->
       </tbody>
     </table>
   </div>
 
-  <!-- 引入 Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // 已套用您提供的新 API Key
     const firebaseConfig = {
       apiKey: "AIzaSyBh4wNEwXzGOxKOJqj3Akg7gj1WxFHzmNQ",
       authDomain: "throw-a-coin.firebaseapp.com",
@@ -161,8 +321,8 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // 預設物品資料 (包含截圖中的物品名稱與稀有度範例)
-    const presetNames = {
+    // 內建完整的預設物品資料庫（確保名稱不消失）
+    const defaultDatabase = {
       163: { name: "Nautilus", rarity: "Chronal" },
       164: { name: "Training Dummy", rarity: "Carved" },
       165: { name: "Golden Fan", rarity: "Carved" },
@@ -187,9 +347,9 @@
     const TOTAL_ITEMS = 188;
     let itemsData = {};
 
-    // 初始化 1~188 資料庫範本
+    // 初始化 1~188 資料
     for (let i = 1; i <= TOTAL_ITEMS; i++) {
-      const preset = presetNames[i] || {};
+      const preset = defaultDatabase[i] || {};
       itemsData[`item_${i}`] = {
         id: i,
         name: preset.name || `物品 #${i}`,
@@ -204,59 +364,96 @@
     const tbody = document.getElementById("table-body");
     const authBtn = document.getElementById("auth-btn");
     const authStatus = document.getElementById("auth-status");
+    const searchInput = document.getElementById("search-input");
 
-    // 渲染表格
-    function renderTable() {
+    // 渲染表格與更新統計
+    function render() {
+      const query = searchInput.value.toLowerCase().trim();
       tbody.innerHTML = "";
-      
-      const sortedItems = Object.keys(itemsData)
-        .map(key => ({ key, ...itemsData[key] }))
-        .sort((a, b) => a.id - b.id);
 
-      sortedItems.forEach(item => {
+      let astralCountSum = 0;
+      let astralCollected = 0;
+      let divineCollected = 0;
+      let voidCollected = 0;
+
+      const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
+
+      sortedKeys.forEach(key => {
+        const item = itemsData[key];
+
+        // 統計計數
+        if (item.astral) astralCollected++;
+        if (item.divine) divineCollected++;
+        if (item.void) voidCollected++;
+        astralCountSum += (item.astralCount || 0);
+
+        // 搜尋過濾
+        const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
+        if (!matchSearch) return;
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${item.id}</td>
-          <td>${item.name}</td>
-          <td>${item.rarity}</td>
-          <td class="status-cell ${item.astral ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'astral')">
-            ${item.astral ? '已收集' : ''}
+          <td><strong>#${item.id}</strong></td>
+          <td><strong>${item.name}</strong></td>
+          <td><span class="rarity-tag rarity-${item.rarity}">${item.rarity}</span></td>
+          <td class="status-cell" onclick="toggleStatus('${key}', 'astral')">
+            <span class="badge ${item.astral ? 'badge-collected' : 'badge-empty'}">${item.astral ? '✓ 已收集' : '-'}</span>
           </td>
-          <td class="count-cell" onclick="editCount('${item.key}')">
-            ${item.astralCount !== undefined ? item.astralCount : 0}
+          <td class="status-cell">
+            <div class="count-box">
+              <button class="count-btn" onclick="adjustCount(event, '${key}', -1)">-</button>
+              <span onclick="editCountDirect('${key}')" style="min-width: 24px; text-align: center; font-weight: 700;">${item.astralCount || 0}</span>
+              <button class="count-btn" onclick="adjustCount(event, '${key}', 1)">+</button>
+            </div>
           </td>
-          <td class="status-cell ${item.divine ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'divine')">
-            ${item.divine ? '已收集' : ''}
+          <td class="status-cell" onclick="toggleStatus('${key}', 'divine')">
+            <span class="badge ${item.divine ? 'badge-collected' : 'badge-empty'}">${item.divine ? '✓ 已收集' : '-'}</span>
           </td>
-          <td class="status-cell ${item.void ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'void')">
-            ${item.void ? '已收集' : ''}
+          <td class="status-cell" onclick="toggleStatus('${key}', 'void')">
+            <span class="badge ${item.void ? 'badge-collected' : 'badge-empty'}">${item.void ? '✓ 已收集' : '-'}</span>
           </td>
         `;
         tbody.appendChild(tr);
       });
+
+      // 更新統計儀表板數據
+      document.getElementById("stat-astral").innerText = `${astralCollected} / ${TOTAL_ITEMS} (${((astralCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
+      document.getElementById("stat-divine").innerText = `${divineCollected} / ${TOTAL_ITEMS} (${((divineCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
+      document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${((voidCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
+      document.getElementById("stat-count-total").innerText = astralCountSum;
     }
 
-    // 切換狀態 (Astral, Divine, Void)
+    // 切換狀態 (Astral / Divine / Void)
     window.toggleStatus = async (key, type) => {
       if (!auth.currentUser) return;
       itemsData[key][type] = !itemsData[key][type];
-      renderTable();
+      render();
       await syncToCloud();
     };
 
-    // 修改 Astral Count 數量
-    window.editCount = async (key) => {
+    // 按鈕 +/- 增減數量
+    window.adjustCount = async (e, key, delta) => {
+      e.stopPropagation();
       if (!auth.currentUser) return;
-      const currentVal = itemsData[key].astralCount || 0;
-      const newVal = prompt(`請輸入 ${itemsData[key].name} 的 Astral Count 數量：`, currentVal);
-      if (newVal !== null && !isNaN(newVal)) {
-        itemsData[key].astralCount = parseInt(newVal, 10);
-        renderTable();
+      const current = itemsData[key].astralCount || 0;
+      itemsData[key].astralCount = Math.max(0, current + delta);
+      render();
+      await syncToCloud();
+    };
+
+    // 點擊數字直接輸入
+    window.editCountDirect = async (key) => {
+      if (!auth.currentUser) return;
+      const current = itemsData[key].astralCount || 0;
+      const input = prompt(`請輸入 ${itemsData[key].name} 的 Astral 數量：`, current);
+      if (input !== null && !isNaN(input)) {
+        itemsData[key].astralCount = Math.max(0, parseInt(input, 10));
+        render();
         await syncToCloud();
       }
     };
 
-    // 同步到 Firestore 雲端資料庫
+    // 同步到 Firestore
     async function syncToCloud() {
       try {
         await setDoc(doc(db, "tracker", "progress"), { items: itemsData }, { merge: true });
@@ -265,46 +462,60 @@
       }
     }
 
-    // 監聽雲端資料庫更新 (即時同步)
+    // 即時監聽資料庫
     onSnapshot(doc(db, "tracker", "progress"), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.items) {
           Object.keys(data.items).forEach(key => {
             if (itemsData[key]) {
-              itemsData[key] = { ...itemsData[key], ...data.items[key] };
+              // 保留本地預設 name / rarity，只同步收集狀態
+              itemsData[key].astral = data.items[key].astral ?? itemsData[key].astral;
+              itemsData[key].astralCount = data.items[key].astralCount ?? itemsData[key].astralCount;
+              itemsData[key].divine = data.items[key].divine ?? itemsData[key].divine;
+              itemsData[key].void = data.items[key].void ?? itemsData[key].void;
+              
+              if (data.items[key].name && data.items[key].name !== `物品 #${itemsData[key].id}`) {
+                itemsData[key].name = data.items[key].name;
+              }
+              if (data.items[key].rarity) {
+                itemsData[key].rarity = data.items[key].rarity;
+              }
             }
           });
-          renderTable();
+          render();
         }
       }
     });
 
-    // 監聽登入狀態
+    // 監聽搜尋輸入
+    searchInput.addEventListener("input", render);
+
+    // 驗證登入狀態
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.body.classList.remove("read-only");
         authStatus.innerText = `管理者已登入 (${user.email})`;
         authBtn.innerText = "登出";
+        authBtn.classList.add("btn-danger");
       } else {
         document.body.classList.add("read-only");
         authStatus.innerText = "當前狀態：瀏覽模式 (唯讀)";
         authBtn.innerText = "管理員登入";
+        authBtn.classList.remove("btn-danger");
       }
     });
 
-    // 登入 / 登出
+    // 登入按鈕事件
     authBtn.onclick = async () => {
       if (auth.currentUser) {
         await signOut(auth);
-        alert("已成功登出！");
       } else {
         const email = prompt("請輸入管理者 Email：");
         const password = prompt("請輸入密碼：");
         if (email && password) {
           try {
             await signInWithEmailAndPassword(auth, email, password);
-            alert("登入成功！已解鎖表格編輯功能。");
           } catch (err) {
             alert("登入失敗：帳號或密碼錯誤！");
           }
@@ -312,7 +523,7 @@
       }
     };
 
-    renderTable();
+    render();
   </script>
 </body>
 </html>
