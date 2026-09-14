@@ -18,7 +18,6 @@
       --success-bg: rgba(16, 185, 129, 0.15);
       --success-text: #34d399;
       --success-border: #10b981;
-      --gold-glow: #fbbf24;
     }
 
     * { box-sizing: border-box; }
@@ -31,7 +30,6 @@
       padding: 24px;
     }
 
-    /* 頂部導覽列 */
     header {
       display: flex;
       justify-content: space-between;
@@ -82,7 +80,6 @@
     .btn-danger { background-color: #ef4444; }
     .btn-danger:hover { background-color: #dc2626; }
 
-    /* 統計儀表板 */
     .dashboard {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -109,7 +106,6 @@
       color: var(--text-main);
     }
 
-    /* 搜尋與篩選工具列 */
     .toolbar {
       display: flex;
       gap: 12px;
@@ -117,7 +113,7 @@
       flex-wrap: wrap;
     }
 
-    .search-input, .select-input {
+    .search-input {
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       color: var(--text-main);
@@ -125,14 +121,11 @@
       border-radius: 8px;
       font-size: 0.9rem;
       outline: none;
+      flex: 1;
+      min-width: 200px;
     }
+    .search-input:focus { border-color: var(--accent); }
 
-    .search-input { flex: 1; min-width: 200px; }
-    .search-input:focus, .select-input:focus {
-      border-color: var(--accent);
-    }
-
-    /* 表格容器與樣式 */
     .table-container {
       overflow-x: auto;
       background-color: var(--card-bg);
@@ -173,7 +166,12 @@
       background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* 稀有度標籤顏色 */
+    /* 可編輯提示樣式 */
+    body:not(.read-only) .editable-cell:hover {
+      background-color: rgba(99, 102, 241, 0.15);
+      cursor: pointer;
+    }
+
     .rarity-tag {
       display: inline-block;
       padding: 2px 8px;
@@ -188,7 +186,6 @@
     .rarity-Veiled { color: #a855f7; background: rgba(168, 85, 247, 0.15); }
     .rarity-Yokai { color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
 
-    /* 狀態按鈕與互動 */
     .status-cell {
       text-align: center;
       cursor: pointer;
@@ -204,9 +201,7 @@
       transition: all 0.2s;
     }
 
-    .badge-empty {
-      color: #475569;
-    }
+    .badge-empty { color: #475569; }
 
     .badge-collected {
       background-color: var(--success-bg);
@@ -241,7 +236,8 @@
     }
 
     body.read-only .status-cell,
-    body.read-only .count-box {
+    body.read-only .count-box,
+    body.read-only .editable-cell {
       pointer-events: none;
     }
   </style>
@@ -258,7 +254,6 @@
     </div>
   </header>
 
-  <!-- 數據統計儀表板 -->
   <div class="dashboard">
     <div class="stat-card">
       <div class="stat-title">Astral 收集進度</div>
@@ -278,9 +273,8 @@
     </div>
   </div>
 
-  <!-- 搜尋工具列 -->
   <div class="toolbar">
-    <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (如: 163 或 Nautilus)...">
+    <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後可雙擊名稱改名)...">
   </div>
 
   <div class="table-container">
@@ -288,8 +282,8 @@
       <thead>
         <tr>
           <th style="width: 80px;">編號</th>
-          <th>物品名稱</th>
-          <th style="width: 140px;">稀有度</th>
+          <th>物品名稱 (雙擊可修改)</th>
+          <th style="width: 140px;">稀有度 (雙擊可修改)</th>
           <th style="width: 130px; text-align: center;">Astral</th>
           <th style="width: 140px; text-align: center;">Astral Count</th>
           <th style="width: 130px; text-align: center;">Divine</th>
@@ -297,7 +291,6 @@
         </tr>
       </thead>
       <tbody id="table-body">
-        <!-- JS 動態渲染 -->
       </tbody>
     </table>
   </div>
@@ -321,7 +314,6 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // 內建完整的預設物品資料庫（確保名稱不消失）
     const defaultDatabase = {
       163: { name: "Nautilus", rarity: "Chronal" },
       164: { name: "Training Dummy", rarity: "Carved" },
@@ -347,7 +339,6 @@
     const TOTAL_ITEMS = 188;
     let itemsData = {};
 
-    // 初始化 1~188 資料
     for (let i = 1; i <= TOTAL_ITEMS; i++) {
       const preset = defaultDatabase[i] || {};
       itemsData[`item_${i}`] = {
@@ -366,7 +357,6 @@
     const authStatus = document.getElementById("auth-status");
     const searchInput = document.getElementById("search-input");
 
-    // 渲染表格與更新統計
     function render() {
       const query = searchInput.value.toLowerCase().trim();
       tbody.innerHTML = "";
@@ -381,21 +371,19 @@
       sortedKeys.forEach(key => {
         const item = itemsData[key];
 
-        // 統計計數
         if (item.astral) astralCollected++;
         if (item.divine) divineCollected++;
         if (item.void) voidCollected++;
         astralCountSum += (item.astralCount || 0);
 
-        // 搜尋過濾
         const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
         if (!matchSearch) return;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>#${item.id}</strong></td>
-          <td><strong>${item.name}</strong></td>
-          <td><span class="rarity-tag rarity-${item.rarity}">${item.rarity}</span></td>
+          <td class="editable-cell" ondblclick="editField('${key}', 'name')" title="登入後雙擊修改名稱"><strong>${item.name}</strong></td>
+          <td class="editable-cell" ondblclick="editField('${key}', 'rarity')" title="登入後雙擊修改稀有度"><span class="rarity-tag rarity-${item.rarity}">${item.rarity}</span></td>
           <td class="status-cell" onclick="toggleStatus('${key}', 'astral')">
             <span class="badge ${item.astral ? 'badge-collected' : 'badge-empty'}">${item.astral ? '✓ 已收集' : '-'}</span>
           </td>
@@ -416,14 +404,25 @@
         tbody.appendChild(tr);
       });
 
-      // 更新統計儀表板數據
       document.getElementById("stat-astral").innerText = `${astralCollected} / ${TOTAL_ITEMS} (${((astralCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-divine").innerText = `${divineCollected} / ${TOTAL_ITEMS} (${((divineCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${((voidCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-count-total").innerText = astralCountSum;
     }
 
-    // 切換狀態 (Astral / Divine / Void)
+    // 雙擊修改名稱 / 稀有度
+    window.editField = async (key, field) => {
+      if (!auth.currentUser) return;
+      const fieldLabel = field === 'name' ? '物品名稱' : '稀有度';
+      const currentVal = itemsData[key][field] || '';
+      const newVal = prompt(`請輸入新的 ${fieldLabel}（編號 #${itemsData[key].id}）：`, currentVal);
+      if (newVal !== null && newVal.trim() !== '') {
+        itemsData[key][field] = newVal.trim();
+        render();
+        await syncToCloud();
+      }
+    };
+
     window.toggleStatus = async (key, type) => {
       if (!auth.currentUser) return;
       itemsData[key][type] = !itemsData[key][type];
@@ -431,7 +430,6 @@
       await syncToCloud();
     };
 
-    // 按鈕 +/- 增減數量
     window.adjustCount = async (e, key, delta) => {
       e.stopPropagation();
       if (!auth.currentUser) return;
@@ -441,7 +439,6 @@
       await syncToCloud();
     };
 
-    // 點擊數字直接輸入
     window.editCountDirect = async (key) => {
       if (!auth.currentUser) return;
       const current = itemsData[key].astralCount || 0;
@@ -453,7 +450,6 @@
       }
     };
 
-    // 同步到 Firestore
     async function syncToCloud() {
       try {
         await setDoc(doc(db, "tracker", "progress"), { items: itemsData }, { merge: true });
@@ -462,25 +458,13 @@
       }
     }
 
-    // 即時監聽資料庫
     onSnapshot(doc(db, "tracker", "progress"), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.items) {
           Object.keys(data.items).forEach(key => {
             if (itemsData[key]) {
-              // 保留本地預設 name / rarity，只同步收集狀態
-              itemsData[key].astral = data.items[key].astral ?? itemsData[key].astral;
-              itemsData[key].astralCount = data.items[key].astralCount ?? itemsData[key].astralCount;
-              itemsData[key].divine = data.items[key].divine ?? itemsData[key].divine;
-              itemsData[key].void = data.items[key].void ?? itemsData[key].void;
-              
-              if (data.items[key].name && data.items[key].name !== `物品 #${itemsData[key].id}`) {
-                itemsData[key].name = data.items[key].name;
-              }
-              if (data.items[key].rarity) {
-                itemsData[key].rarity = data.items[key].rarity;
-              }
+              itemsData[key] = { ...itemsData[key], ...data.items[key] };
             }
           });
           render();
@@ -488,10 +472,8 @@
       }
     });
 
-    // 監聽搜尋輸入
     searchInput.addEventListener("input", render);
 
-    // 驗證登入狀態
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.body.classList.remove("read-only");
@@ -506,7 +488,6 @@
       }
     });
 
-    // 登入按鈕事件
     authBtn.onclick = async () => {
       if (auth.currentUser) {
         await signOut(auth);
