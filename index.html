@@ -141,14 +141,19 @@
     const authBtn = document.getElementById("auth-btn");
     const authStatus = document.getElementById("auth-status");
 
-    // 渲染 UI 列表
+// 渲染 UI 列表 (已修正：強制按 ID 數字 1 ~ 188 正確排序)
     function renderGrid() {
       grid.innerHTML = "";
-      Object.keys(itemsData).forEach(key => {
-        const item = itemsData[key];
+      
+      // 將資料轉為陣列並按 id 從小到大排序
+      const sortedItems = Object.keys(itemsData)
+        .map(key => ({ key, ...itemsData[key] }))
+        .sort((a, b) => a.id - b.id);
+
+      sortedItems.forEach(item => {
         const card = document.createElement("div");
         card.className = `item-card ${item.completed ? 'completed' : ''}`;
-        card.onclick = () => toggleItem(key);
+        card.onclick = () => toggleItem(item.key);
         card.innerHTML = `
           <div class="item-category">${item.category}</div>
           <div class="item-name">${item.name}</div>
