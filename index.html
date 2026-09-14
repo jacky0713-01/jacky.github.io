@@ -79,6 +79,8 @@
     .btn:hover { background-color: var(--accent-hover); }
     .btn-secondary { background-color: #334155; }
     .btn-secondary:hover { background-color: #475569; }
+    .btn-warning { background-color: #eab308; color: #0f172a; }
+    .btn-warning:hover { background-color: #ca8a04; }
     .btn-danger { background-color: #ef4444; }
     .btn-danger:hover { background-color: #dc2626; }
 
@@ -129,12 +131,10 @@
     }
     .search-input:focus { border-color: var(--accent); }
 
-    /* 預設隱藏管理員專屬控制區（如匯出按鈕） */
     .admin-only {
       display: none;
     }
 
-    /* 登入管理員後才顯示隱藏內容 */
     body:not(.read-only) .admin-only {
       display: inline-flex;
       gap: 12px;
@@ -337,8 +337,10 @@
   <div class="toolbar">
     <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後雙擊名稱/圖片/稀有度可編輯)...">
     <div class="admin-only">
-      <button id="export-csv-btn" class="btn btn-secondary">📥 匯出 CSV (Excel)</button>
+      <button id="export-csv-btn" class="btn btn-secondary">📥 匯出 CSV</button>
       <button id="export-json-btn" class="btn btn-secondary">💾 備份 JSON</button>
+      <button id="import-btn" class="btn btn-warning">📤 匯入 JSON 備份</button>
+      <input type="file" id="import-file-input" accept=".json" style="display: none;">
     </div>
   </div>
 
@@ -423,6 +425,8 @@
     const authBtn = document.getElementById("auth-btn");
     const authStatus = document.getElementById("auth-status");
     const searchInput = document.getElementById("search-input");
+    const importBtn = document.getElementById("import-btn");
+    const importFileInput = document.getElementById("import-file-input");
 
     function render() {
       const query = searchInput.value.toLowerCase().trim();
@@ -547,12 +551,9 @@
       }
     });
 
-    // 匯出 CSV (權限驗證：必須登入)
+    // 匯出 CSV
     document.getElementById("export-csv-btn").onclick = () => {
-      if (!auth.currentUser) {
-        alert("請先進行管理員登入後再進行匯出！");
-        return;
-      }
+      if (!auth.currentUser) return;
       let csvContent = "\uFEFF編號,物品名稱,稀有度,Astral,Astral數量,Divine,Void,圖片網址\n";
       const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
       
@@ -581,12 +582,9 @@
       document.body.removeChild(link);
     };
 
-    // 匯出 JSON (權限驗證：必須登入)
+    // 匯出 JSON
     document.getElementById("export-json-btn").onclick = () => {
-      if (!auth.currentUser) {
-        alert("請先進行管理員登入後再進行匯出！");
-        return;
-      }
+      if (!auth.currentUser) return;
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(itemsData, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
@@ -594,6 +592,38 @@
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
+    };
+
+    // 匯入 JSON 備份檔案
+    importBtn.onclick = () => {
+      if (!auth.currentUser) return;
+      importFileInput.click();
+    };
+
+    importFileInput.onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const importedData = JSON.parse(event.target.result);
+          if (typeof importedData === 'object' && importedData !== null) {
+            if (confirm("警告：匯入新資料將會覆蓋當前雲端資料庫的設定，確定要匯入嗎？")) {
+              itemsData = { ...itemsData, ...importedData };
+              render();
+              await syncToCloud();
+              alert("資料匯入成功並已同步至雲端！");
+            }
+          } else {
+            alert("匯入失敗：格式不符合 JSON 資料架構！");
+          }
+        } catch (err) {
+          alert("匯入失敗：無法解析該 JSON 檔案！");
+        }
+        importFileInput.value = ''; // 清空選項
+      };
+      reader.readAsText(file);
     };
 
     searchInput.addEventListener("input", render);
