@@ -156,7 +156,7 @@
     }
 
     td {
-      padding: 10px 16px;
+      padding: 8px 16px;
       border-bottom: 1px solid var(--border-color);
       font-size: 0.95rem;
       color: var(--text-main);
@@ -167,11 +167,11 @@
       background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* 圖片樣式與懸停放大效果 */
+    /* 放大圖片外框尺寸與樣式 */
     .item-img-container {
-      width: 44px;
-      height: 44px;
-      border-radius: 8px;
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
       background: #0f172a;
       border: 1px dashed var(--border-color);
       display: flex;
@@ -186,27 +186,25 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      transition: transform 0.2s;
+      transition: transform 0.2s ease-in-out;
     }
 
     .item-img-container:hover .item-img {
-      transform: scale(1.6);
+      transform: scale(1.4);
       z-index: 20;
     }
 
     .img-placeholder {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: #475569;
       text-align: center;
     }
 
-    /* 可編輯提示樣式 */
     body:not(.read-only) .editable-cell:hover {
       background-color: rgba(99, 102, 241, 0.15);
       cursor: pointer;
     }
 
-    /* 稀有度顏色豐富設置 */
     .rarity-tag {
       display: inline-block;
       padding: 4px 10px;
@@ -218,7 +216,6 @@
       text-transform: capitalize;
     }
 
-    /* 各種稀有度專屬顏色 */
     .rarity-common { color: #9e9e9e; background: rgba(158, 158, 158, 0.15); border: 1px solid #616161; }
     .rarity-uncommon { color: #4caf50; background: rgba(76, 175, 80, 0.15); border: 1px solid #388e3c; }
     .rarity-rare { color: #2196f3; background: rgba(33, 150, 243, 0.15); border: 1px solid #1976d2; }
@@ -333,13 +330,13 @@
       <thead>
         <tr>
           <th style="width: 70px;">編號</th>
-          <th style="width: 200px;">物品名稱</th>
-          <th style="width: 80px; text-align: center;">圖片</th>
+          <th style="width: 180px;">物品名稱</th>
+          <th style="width: 120px; text-align: center;">圖片</th>
           <th style="width: 130px;">稀有度</th>
-          <th style="width: 120px; text-align: center;">Astral</th>
-          <th style="width: 130px; text-align: center;">Astral Count</th>
-          <th style="width: 120px; text-align: center;">Divine</th>
-          <th style="width: 120px; text-align: center;">Void</th>
+          <th style="width: 120px; text-align: center;">ASTRAL</th>
+          <th style="width: 130px; text-align: center;">ASTRAL COUNT</th>
+          <th style="width: 120px; text-align: center;">DIVINE</th>
+          <th style="width: 120px; text-align: center;">VOID</th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -432,7 +429,6 @@
         const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
         if (!matchSearch) return;
 
-        // 計算稀有度 class 名稱 (轉小寫處理)
         const rarityClass = item.rarity ? `rarity-${item.rarity.toLowerCase()}` : 'rarity-common';
 
         const tr = document.createElement("tr");
@@ -473,7 +469,6 @@
       document.getElementById("stat-count-total").innerText = astralCountSum;
     }
 
-    // 雙擊修改名稱 / 圖片網址 / 稀有度
     window.editField = async (key, field) => {
       if (!auth.currentUser) return;
       let labelMap = { name: '物品名稱', imageUrl: '圖片網址 (URL)', rarity: '稀有度' };
