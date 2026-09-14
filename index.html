@@ -1,566 +1,221 @@
 <!DOCTYPE html>
-<html lang="zh-TW" class="dark">
+<html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Item Collection Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0f172a',
-                        cardBg: '#1e293b',
-                        accentBlue: '#38bdf8',
-                        accentPurple: '#c084fc',
-                        accentGold: '#fbbf24',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-        .glow-green {
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
-        }
-        .glow-red {
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.25);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roblox 物品收集圖鑑 (188項)</title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --accent-color: #bb86fc;
+      --text-color: #e0e0e0;
+      --completed-color: #03dac6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    h1 { margin: 0; font-size: 1.5rem; }
+
+    .auth-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #2c2c2c;
+      padding: 8px 16px;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover { opacity: 0.9; }
+
+    /* 唯讀模式控制：未登入時禁止編輯卡片與勾選 */
+    body.read-only .item-card {
+      pointer-events: none;
+      opacity: 0.85;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    .item-card {
+      background-color: var(--card-bg);
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .item-card.completed {
+      border-color: var(--completed-color);
+      background-color: #1a2725;
+    }
+
+    .item-category {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .item-name {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .status-badge {
+      font-size: 0.8rem;
+      color: var(--completed-color);
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased pb-12 select-none">
+<body class="read-only">
 
-    <!-- Header Navigation -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-cyan-500/20">
-                    🏆
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                        物品圖鑑收集庫 <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-400 border border-cyan-800">v2.0 FULL</span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Game Item Collection Database (IDs 1 - 188)</p>
-                </div>
-            </div>
-            
-            <!-- Quick Stats & Actions -->
-            <div class="flex items-center gap-6 text-sm">
-                <div class="flex flex-col">
-                    <span class="text-xs text-slate-400">總全收集率</span>
-                    <span id="global-progress-text" class="font-bold text-cyan-400 font-mono">0%</span>
-                </div>
-                <div class="w-32 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700">
-                    <div id="global-progress-bar" class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full w-0 transition-all duration-500"></div>
-                </div>
-                <button id="reset-btn" class="px-3 py-1.5 text-xs bg-slate-800 hover:bg-rose-950 hover:text-rose-300 text-slate-400 rounded-lg border border-slate-700 transition">
-                    🔄 重置進度
-                </button>
-            </div>
-        </div>
-    </header>
+  <header>
+    <h1>Roblox 188 物品進度追蹤器</h1>
+    <div class="auth-box">
+      <span id="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
+      <button id="auth-btn">管理員登入</button>
+    </div>
+  </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+  <div class="grid-container" id="item-grid"></div>
 
-        <!-- Metrics Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">物品總數</p>
-                        <h3 id="stat-total" class="text-2xl font-bold text-white mt-1 font-mono">188</h3>
-                    </div>
-                    <div class="p-2 bg-slate-800 text-slate-300 rounded-lg">📦</div>
-                </div>
-            </div>
+  <!-- 引入 Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">已完全收集 (4/4)</p>
-                        <h3 id="stat-completed" class="text-2xl font-bold text-emerald-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-emerald-950/60 text-emerald-400 rounded-lg border border-emerald-800/40">✅</div>
-                </div>
-            </div>
+    // 你的 Firebase 金鑰設定 (已自動為你填入專案資訊)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDRlmXaEM6LEyLQntbABkoSJ-0jOFI3nVo",
+      authDomain: "throw-a-coin.firebaseapp.com",
+      projectId: "throw-a-coin",
+      storageBucket: "throw-a-coin.firebasestorage.app",
+      messagingSenderId: "79225369395",
+      appId: "1:79225369395:web:ac6b6dadb1154159c40446",
+      measurementId: "G-B84NLZX6Z8"
+    };
 
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">未完全收集</p>
-                        <h3 id="stat-incomplete" class="text-2xl font-bold text-rose-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-rose-950/60 text-rose-400 rounded-lg border border-rose-800/40">⚠️</div>
-                </div>
-            </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-slate-400">目前顯示數量</p>
-                        <h3 id="stat-showing" class="text-2xl font-bold text-cyan-400 mt-1 font-mono">0</h3>
-                    </div>
-                    <div class="p-2 bg-cyan-950/60 text-cyan-400 rounded-lg border border-cyan-800/40">🔍</div>
-                </div>
-            </div>
-        </div>
+    // 產生 188 項範例物品資料
+    const TOTAL_ITEMS = 188;
+    let itemsData = {};
+    for (let i = 1; i <= TOTAL_ITEMS; i++) {
+      itemsData[`item_${i}`] = { id: i, name: `物品 #${i}`, category: `分類 ${Math.ceil(i / 20)}`, completed: false };
+    }
 
-        <!-- Filter Bar -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 shadow-md flex flex-col md:flex-row gap-4 justify-between items-center">
-            <!-- Search Box -->
-            <div class="relative w-full md:w-96">
-                <input type="text" id="search-input" placeholder="搜尋物品名稱或分類 (如 Common, Divine, 89)..." 
-                    class="w-full bg-slate-950 border border-slate-700 text-slate-200 placeholder-slate-500 rounded-xl px-4 py-2.5 pl-10 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition">
-                <svg class="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </div>
+    const grid = document.getElementById("item-grid");
+    const authBtn = document.getElementById("auth-btn");
+    const authStatus = document.getElementById("auth-status");
 
-            <!-- Filters Group -->
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
-                <!-- Category Select -->
-                <select id="category-filter" class="bg-slate-950 border border-slate-700 text-slate-300 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-cyan-500 transition">
-                    <option value="ALL">全部分類 (All Categories)</option>
-                </select>
+    // 渲染 UI 列表
+    function renderGrid() {
+      grid.innerHTML = "";
+      Object.keys(itemsData).forEach(key => {
+        const item = itemsData[key];
+        const card = document.createElement("div");
+        card.className = `item-card ${item.completed ? 'completed' : ''}`;
+        card.onclick = () => toggleItem(key);
+        card.innerHTML = `
+          <div class="item-category">${item.category}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="status-badge">${item.completed ? '✓ 已收集' : '未完成'}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-                <!-- Status Filter Buttons -->
-                <div class="inline-flex rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs font-medium">
-                    <button class="status-btn active px-3 py-1.5 rounded-lg text-slate-300 transition" data-status="ALL">全部</button>
-                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="COMPLETE">已完成</button>
-                    <button class="status-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition" data-status="INCOMPLETE">未完成</button>
-                </div>
-            </div>
-        </div>
+    // 點擊切換收集狀態 (只有登入後可修改並同步雲端)
+    async function toggleItem(key) {
+      if (!auth.currentUser) return;
+      itemsData[key].completed = !itemsData[key].completed;
+      renderGrid();
+      
+      // 同步到 Firestore 雲端資料庫
+      try {
+        await setDoc(doc(db, "tracker", "progress"), { items: itemsData }, { merge: true });
+      } catch (e) {
+        console.error("寫入資料庫失敗：", e);
+      }
+    }
 
-        <!-- Data Table Container -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm text-slate-300">
-                    <thead class="bg-slate-950/90 text-slate-400 uppercase text-xs font-semibold border-b border-slate-800 tracking-wider">
-                        <tr>
-                            <th class="py-4 px-6 text-center w-20">編號</th>
-                            <th class="py-4 px-6">物品名稱</th>
-                            <th class="py-4 px-6 text-center">分類 (Rarity)</th>
-                            <th class="py-4 px-6 text-center text-cyan-400 cursor-pointer hover:underline" title="點擊狀態標籤可切換">Astral ⚡</th>
-                            <th class="py-4 px-6 text-center text-cyan-300 cursor-pointer hover:underline" title="點擊數字可加減">Astral Count 🔢</th>
-                            <th class="py-4 px-6 text-center text-purple-400 cursor-pointer hover:underline" title="點擊狀態標籤可切換">Divine ✨</th>
-                            <th class="py-4 px-6 text-center text-amber-400 cursor-pointer hover:underline" title="點擊狀態標籤可切換">Void 🌌</th>
-                        </tr>
-                    </thead>
-                    <tbody id="items-table-body" class="divide-y divide-slate-800/60 font-medium">
-                        <!-- Dynamic Content Rendered via JS -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Empty State -->
-            <div id="empty-state" class="hidden py-16 text-center">
-                <p class="text-4xl mb-3">🔍</p>
-                <p class="text-slate-400 text-base">找不到符合條件的物品</p>
-                <p class="text-slate-600 text-xs mt-1">請嘗試變更搜尋關鍵字或篩選條件</p>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // Complete Master Item Dataset (IDs 1 - 188)
-        const DEFAULT_ITEMS = [
-            { id: 1, name: "Soccer Ball", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 2, name: "Traffic Cone", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 3, name: "Rubber Duck", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 4, name: "Alarm Clock", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 5, name: "Apple", category: "Common", astral: true, count: 4, divine: true, void: true },
-            { id: 6, name: "Gold Bar", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 7, name: "Trophy", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 8, name: "TV", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 9, name: "Chair", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 10, name: "Ping Pong", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 11, name: "Cash Bag", category: "Uncommon", astral: true, count: 4, divine: true, void: true },
-            { id: 12, name: "Wheel", category: "Rare", astral: true, count: 4, divine: true, void: true },
-            { id: 13, name: "Treasure Chest", category: "Rare", astral: true, count: 4, divine: true, void: true },
-            { id: 14, name: "Piggy Bank", category: "Rare", astral: true, count: 4, divine: true, void: true },
-            { id: 15, name: "Guitar", category: "Rare", astral: true, count: 4, divine: true, void: true },
-            { id: 16, name: "Magnet", category: "Rare", astral: true, count: 4, divine: true, void: true },
-            { id: 17, name: "Safe", category: "Epic", astral: true, count: 4, divine: true, void: true },
-            { id: 18, name: "Cash Register", category: "Epic", astral: true, count: 4, divine: true, void: true },
-            { id: 19, name: "Gem", category: "Epic", astral: true, count: 4, divine: true, void: true },
-            { id: 20, name: "Anchor", category: "Epic", astral: true, count: 4, divine: true, void: true },
-            { id: 21, name: "Boombox", category: "Epic", astral: true, count: 4, divine: true, void: true },
-            { id: 22, name: "Arcade Machine", category: "Legendary", astral: true, count: 4, divine: true, void: true },
-            { id: 23, name: "Crown", category: "Legendary", astral: true, count: 4, divine: true, void: true },
-            { id: 24, name: "Grandfather Clock", category: "Legendary", astral: true, count: 4, divine: true, void: true },
-            { id: 25, name: "Fridge", category: "Legendary", astral: true, count: 4, divine: true, void: true },
-            { id: 26, name: "Mjolnir", category: "Legendary", astral: true, count: 4, divine: true, void: true },
-            { id: 27, name: "Tank", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 28, name: "Azure Hypercar", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 29, name: "Nuke", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 30, name: "Submarine", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 31, name: "Meeps", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 32, name: "UFO", category: "Mythic", astral: true, count: 4, divine: true, void: true },
-            { id: 33, name: "Prism Shard", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
-            { id: 34, name: "Rocketship", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
-            { id: 35, name: "Crimson Racer", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
-            { id: 36, name: "Mona Lisa", category: "Cosmic", astral: true, count: 4, divine: true, void: true },
-            { id: 37, name: "Sailboat", category: "Celestial", astral: true, count: 4, divine: true, void: true },
-            { id: 38, name: "Dragon Egg", category: "Celestial", astral: true, count: 4, divine: true, void: true },
-            { id: 39, name: "Private Jet", category: "Celestial", astral: true, count: 4, divine: true, void: true },
-            { id: 40, name: "Ornothopter", category: "Celestial", astral: true, count: 4, divine: true, void: true },
-            { id: 41, name: "Superyacht", category: "Eternal", astral: true, count: 4, divine: true, void: true },
-            { id: 42, name: "Eiffel Tower", category: "Godly", astral: true, count: 4, divine: true, void: true },
-            { id: 43, name: "Big Ben", category: "Godly", astral: true, count: 4, divine: true, void: true },
-            { id: 44, name: "Pyramid", category: "Godly", astral: true, count: 4, divine: true, void: true },
-            { id: 45, name: "Void Compass", category: "Otherversal", astral: true, count: 4, divine: true, void: true },
-            { id: 46, name: "Time Machine", category: "Genesis", astral: true, count: 4, divine: true, void: true },
-            { id: 47, name: "Satellite", category: "Genesis", astral: true, count: 4, divine: true, void: true },
-            { id: 48, name: "Quantum Cube", category: "Genesis", astral: true, count: 4, divine: true, void: true },
-            { id: 49, name: "Impossible Cube", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 50, name: "Singularity", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 51, name: "Black Hole", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 52, name: "Infinity Door", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 53, name: "Infinity Crown", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 54, name: "Antimatter Reactor", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 55, name: "Reality Core", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 56, name: "Moon", category: "Universal", astral: true, count: 4, divine: true, void: true },
-            { id: 57, name: "Mars", category: "Mythical", astral: true, count: 4, divine: true, void: true },
-            { id: 58, name: "Jupiter", category: "Mythical", astral: true, count: 4, divine: true, void: true },
-            { id: 59, name: "Saturn", category: "Mythical", astral: true, count: 4, divine: true, void: true },
-            { id: 60, name: "End of Reality", category: "Mythical", astral: true, count: 4, divine: true, void: true },
-            { id: 61, name: "Reality Throne", category: "Zenith", astral: true, count: 4, divine: true, void: true },
-            { id: 62, name: "Sun", category: "Solar", astral: true, count: 4, divine: true, void: true },
-            { id: 63, name: "Sirius", category: "Zenith", astral: true, count: 4, divine: true, void: true },
-            { id: 64, name: "Spaceship", category: "Zenith", astral: true, count: 4, divine: true, void: true },
-            { id: 65, name: "Betelgeuse", category: "Solar", astral: true, count: 4, divine: true, void: true },
-            { id: 66, name: "Quasar", category: "Solar", astral: true, count: 4, divine: true, void: true },
-            { id: 67, name: "Dyson Sphere", category: "Solar", astral: true, count: 4, divine: true, void: true },
-            { id: 68, name: "Milky Way", category: "Solar", astral: true, count: 4, divine: true, void: true },
-            { id: 69, name: "Golden Lyre", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 70, name: "Sky Harp", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 71, name: "Cloud", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 72, name: "Spartan Shield", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 73, name: "Amphora", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 74, name: "Temple Bell", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 75, name: "Zeus' Thunderbolt", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 76, name: "The Last Star", category: "Radiant", astral: true, count: 4, divine: true, void: true },
-            { id: 77, name: "Poseidon's Trident", category: "Elysian", astral: true, count: 4, divine: true, void: true },
-            { id: 78, name: "Lumen Obelisk", category: "Elysian", astral: true, count: 4, divine: true, void: true },
-            { id: 79, name: "Omphalos", category: "Elysian", astral: true, count: 4, divine: true, void: true },
-            { id: 80, name: "Genie's Lamp", category: "Elysian", astral: true, count: 4, divine: true, void: true },
-            { id: 81, name: "Marble Owl", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
-            { id: 82, name: "Pearly Gates", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
-            { id: 83, name: "Sisyphus' Boulder", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
-            { id: 84, name: "Excalibur", category: "Hyperion", astral: true, count: 4, divine: true, void: true },
-            { id: 85, name: "Cosmic Anchor", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
-            { id: 86, name: "Godform", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
-            { id: 87, name: "Holy Relic", category: "Mythic+", astral: true, count: 4, divine: true, void: true },
-            { id: 88, name: "Angel Statue", category: "Angelic", astral: true, count: 4, divine: true, void: true },
-            { id: 89, name: "Light Engine", category: "Angelic", astral: true, count: 4, divine: true, void: true },
-            { id: 90, name: "Creation Throne", category: "Angelic", astral: true, count: 4, divine: true, void: true },
-            { id: 91, name: "Floating Island", category: "Godlike", astral: true, count: 4, divine: true, void: true },
-            { id: 92, name: "Dream Universe", category: "Godlike", astral: true, count: 4, divine: true, void: true },
-            { id: 93, name: "Theseus Ship", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 94, name: "Omphalos Stone", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 95, name: "Trojan Horse", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 96, name: "Cyclops' Forge", category: "Aurelian", astral: true, count: 4, divine: true, void: true },
-            { id: 97, name: "Tartarus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
-            { id: 98, name: "Mount Olympus", category: "Olympian", astral: true, count: 4, divine: true, void: true },
-            { id: 99, name: "Pandora's Box", category: "Promethean", astral: true, count: 4, divine: true, void: true },
-            { id: 100, name: "Titan Heart", category: "Promethean", astral: true, count: 4, divine: true, void: true },
-            { id: 101, name: "World Tree", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 102, name: "Atlantis", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 103, name: "The Big Bang", category: "Chaos", astral: true, count: 4, divine: true, void: true },
-            { id: 104, name: "Wizard Hat", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 105, name: "Broomstick", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 106, name: "Witch Cauldron", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 107, name: "Basilisk Fang", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 108, name: "Moon Amulet", category: "Arcane", astral: true, count: 4, divine: true, void: true },
-            { id: 109, name: "Phoenix Feather", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 110, name: "Portal Key", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 111, name: "Shadow Sword", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 112, name: "Mimic Chest", category: "Runic", astral: true, count: 4, divine: true, void: true },
-            { id: 113, name: "Enchanted Anvil", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 114, name: "Griffin Egg", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 115, name: "Magic Staff", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 116, name: "Monolith", category: "Mystic", astral: true, count: 4, divine: true, void: true },
-            { id: 117, name: "Philosopher's Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 118, name: "Sundial", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 119, name: "Crystal Ball", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 120, name: "Rune Stone", category: "Infernal", astral: true, count: 4, divine: true, void: true },
-            { id: 121, name: "Moon Throne", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 122, name: "Shadow Orb", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 123, name: "Forgotten Ruins", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 124, name: "Star Altar", category: "Fey", astral: true, count: 4, divine: true, void: true },
-            { id: 125, name: "Oracle Orb", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 126, name: "Forbidden Tome", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 127, name: "Moonwell", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 128, name: "Haunted Manor", category: "Draconic", astral: true, count: 4, divine: true, void: true },
-            { id: 129, name: "Void Eye", category: "Fabled", astral: true, count: 4, divine: true, void: true },
-            { id: 130, name: "Void Rift", category: "Fabled", astral: true, count: 4, divine: true, void: true },
-            { id: 131, name: "Clock Tower", category: "Exalted", astral: true, count: 4, divine: true, void: true },
-            { id: 132, name: "Cloud Palace", category: "Exalted", astral: true, count: 4, divine: true, void: true },
-            { id: 133, name: "Dragon Mountain", category: "Relic", astral: true, count: 4, divine: true, void: true },
-            { id: 134, name: "Alchemist Table", category: "Awakened", astral: true, count: 4, divine: true, void: true },
-            { id: 135, name: "Ghost Ship", category: "Awakened", astral: true, count: 4, divine: true, void: true },
-            { id: 136, name: "Realm Gate", category: "Unbound", astral: true, count: 4, divine: true, void: true },
-            { id: 137, name: "Phantom Fortress", category: "Unbound", astral: true, count: 4, divine: true, void: true },
-            { id: 138, name: "Sky Castle", category: "Mythos", astral: true, count: 4, divine: true, void: true },
-            { id: 139, name: "Gearbox", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 140, name: "Engineer Goggles", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 141, name: "Barometer", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 142, name: "Gramophone", category: "Kinetic", astral: true, count: 4, divine: true, void: true },
-            { id: 143, name: "Piston Machine", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 144, name: "Pressure Canister", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 145, name: "Pneumatic Hammer", category: "Forged", astral: true, count: 4, divine: true, void: true },
-            { id: 146, name: "Telegraph Machine", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 147, name: "Pocketwatch", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 148, name: "Globe", category: "Gilded", astral: true, count: 4, divine: true, void: true },
-            { id: 149, name: "Steam Drill", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 150, name: "Hydraulic Press", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 151, name: "Diving Bell", category: "Victorian", astral: true, count: 4, divine: true, void: true },
-            { id: 152, name: "Steam Cannon", category: "Regal", astral: true, count: 4, divine: true, void: true },
-            { id: 153, name: "Lighthouse", category: "Regal", astral: true, count: 4, divine: true, void: true },
-            { id: 154, name: "Tesla Coil", category: "Epochal", astral: true, count: 4, divine: true, void: true },
-            { id: 155, name: "Jetpack", category: "Impossible", astral: true, count: 4, divine: true, void: true },
-            { id: 156, name: "Turbine", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
-            { id: 157, name: "Hot Air Balloon", category: "Perpetual", astral: true, count: 4, divine: true, void: true },
-            { id: 158, name: "Perpetual Engine", category: "Colossal", astral: true, count: 4, divine: true, void: true },
-            { id: 159, name: "Factory", category: "Deus", astral: true, count: 4, divine: true, void: true },
-            { id: 160, name: "Airship", category: "Deus", astral: true, count: 4, divine: true, void: true },
-            { id: 161, name: "Citadel", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 162, name: "Solar Galleon", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 163, name: "Nautilus", category: "Chronal", astral: true, count: 4, divine: true, void: true },
-            { id: 164, name: "Training Dummy", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 165, name: "Golden Fan", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 166, name: "Bonsai Tree", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 167, name: "Lucky Medallion", category: "Carved", astral: true, count: 4, divine: true, void: true },
-            { id: 168, name: "War Drum", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 169, name: "Shuriken", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 170, name: "Stone Lantern", category: "Honed", astral: true, count: 4, divine: true, void: true },
-            { id: 171, name: "Katana", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 172, name: "Emperor Crown", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 173, name: "Sacred Vase", category: "Tempered", astral: true, count: 4, divine: true, void: true },
-            { id: 174, name: "Oni Mask", category: "Yokai", astral: true, count: 4, divine: true, void: true },
-            { id: 175, name: "Oni Hammer", category: "Yokai", astral: true, count: 4, divine: true, void: true },
-            { id: 176, name: "Torii Gate", category: "Veiled", astral: true, count: 4, divine: true, void: true },
-            { id: 177, name: "Imperial Throne", category: "Veiled", astral: true, count: 4, divine: true, void: true },
-            { id: 178, name: "Dojo", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
-            { id: 179, name: "Great Pagoda", category: "Hallowed", astral: true, count: 4, divine: true, void: true },
-            { id: 180, name: "Dragon Temple", category: "Imperial", astral: true, count: 4, divine: true, void: true },
-            { id: 181, name: "Imperial Seal", category: "Imperial", astral: true, count: 4, divine: true, void: true },
-            { id: 182, name: "Sun Palace", category: "Sovereign", astral: true, count: 4, divine: true, void: true },
-            { id: 183, name: "Mount Fuji", category: "Amatsu", astral: true, count: 4, divine: true, void: true },
-            { id: 184, name: "Dragon Blade", category: "Kami", astral: false, count: 0, divine: false, void: false },
-            { id: 185, name: "Temple Key", category: "Kami", astral: false, count: 0, divine: false, void: false },
-            { id: 186, name: "Yata Mirror", category: "Onmyo", astral: false, count: 0, divine: true, void: false },
-            { id: 187, name: "Oni Warship", category: "Onmyo", astral: false, count: 0, divine: false, void: false },
-            { id: 188, name: "Dragon Pearl", category: "Izanami", astral: false, count: 0, divine: false, void: false },
-        ];
-
-        // State Management with LocalStorage
-        let itemsData = loadItemsData();
-
-        function loadItemsData() {
-            const saved = localStorage.getItem("game_collection_data_v2");
-            if (saved) {
-                try { return JSON.parse(saved); } catch (e) { console.error(e); }
-            }
-            return JSON.parse(JSON.stringify(DEFAULT_ITEMS));
+    // 監聽雲端資料庫更新 (任何裝置更新，網頁即時同步)
+    onSnapshot(doc(db, "tracker", "progress"), (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data.items) {
+          itemsData = data.items;
+          renderGrid();
         }
+      }
+    });
 
-        function saveItemsData() {
-            localStorage.setItem("game_collection_data_v2", JSON.stringify(itemsData));
-            calculateGlobalStats();
+    // 監聽登入狀態改變
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.body.classList.remove("read-only");
+        authStatus.innerText = `管理者已登入 (${user.email})`;
+        authBtn.innerText = "登出";
+      } else {
+        document.body.classList.add("read-only");
+        authStatus.innerText = "當前狀態：瀏覽模式 (唯讀)";
+        authBtn.innerText = "管理員登入";
+      }
+    });
+
+    // 登入 / 登出 按鈕事件
+    authBtn.onclick = async () => {
+      if (auth.currentUser) {
+        await signOut(auth);
+        alert("已成功登出！");
+      } else {
+        const email = prompt("請輸入管理者 Email：");
+        const password = prompt("請輸入密碼：");
+        if (email && password) {
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            alert("登入成功！已解鎖編輯權限。");
+          } catch (err) {
+            alert("登入失敗：帳號或密碼錯誤！");
+          }
         }
+      }
+    };
 
-        // Global Filters State
-        let currentSearch = "";
-        let currentCategory = "ALL";
-        let currentStatusFilter = "ALL";
-
-        // Initialize App
-        document.addEventListener("DOMContentLoaded", () => {
-            populateCategories();
-            calculateGlobalStats();
-            renderTable();
-
-            // Setup Event Listeners
-            document.getElementById("search-input").addEventListener("input", (e) => {
-                currentSearch = e.target.value.trim().toLowerCase();
-                renderTable();
-            });
-
-            document.getElementById("category-filter").addEventListener("change", (e) => {
-                currentCategory = e.target.value;
-                renderTable();
-            });
-
-            document.querySelectorAll(".status-btn").forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    document.querySelectorAll(".status-btn").forEach(b => {
-                        b.classList.remove("active", "bg-slate-800", "text-cyan-400");
-                        b.classList.add("text-slate-400");
-                    });
-                    
-                    btn.classList.add("active", "bg-slate-800", "text-cyan-400");
-                    btn.classList.remove("text-slate-400");
-                    
-                    currentStatusFilter = btn.dataset.status;
-                    renderTable();
-                });
-            });
-
-            document.getElementById("reset-btn").addEventListener("click", () => {
-                if (confirm("確定要將所有收集數據重置為預設狀態嗎？")) {
-                    itemsData = JSON.parse(JSON.stringify(DEFAULT_ITEMS));
-                    saveItemsData();
-                    renderTable();
-                }
-            });
-        });
-
-        function populateCategories() {
-            const categories = Array.from(new Set(DEFAULT_ITEMS.map(item => item.category)));
-            const select = document.getElementById("category-filter");
-            select.innerHTML = `<option value="ALL">全部分類 (All Categories)</option>`;
-            categories.forEach(cat => {
-                const opt = document.createElement("option");
-                opt.value = cat;
-                opt.textContent = cat;
-                select.appendChild(opt);
-            });
-        }
-
-        function isItemComplete(item) {
-            return item.astral && item.count === 4 && item.divine && item.void;
-        }
-
-        function calculateGlobalStats() {
-            const total = itemsData.length;
-            const completedCount = itemsData.filter(isItemComplete).length;
-            const progressPct = Math.round((completedCount / total) * 100);
-
-            document.getElementById("stat-total").textContent = total;
-            document.getElementById("stat-completed").textContent = completedCount;
-            document.getElementById("stat-incomplete").textContent = total - completedCount;
-            
-            document.getElementById("global-progress-text").textContent = `${progressPct}%`;
-            document.getElementById("global-progress-bar").style.width = `${progressPct}%`;
-        }
-
-        function getStatusBadgeHtml(itemId, field, isCollected) {
-            if (isCollected) {
-                return `<button onclick="toggleField(${itemId}, '${field}')" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 glow-green hover:bg-emerald-900 transition">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>已收集
-                </button>`;
-            } else {
-                return `<button onclick="toggleField(${itemId}, '${field}')" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-950/40 text-rose-400 border border-rose-900/40 opacity-75 hover:opacity-100 hover:bg-rose-900/50 transition">
-                    未收集
-                </button>`;
-            }
-        }
-
-        function getCountBadgeHtml(itemId, count) {
-            const isFull = count === 4;
-            return `<div class="inline-flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">
-                <button onclick="changeCount(${itemId}, -1)" class="w-5 h-5 flex items-center justify-center rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">-</button>
-                <span class="w-4 text-center font-mono font-bold ${isFull ? 'text-cyan-400' : 'text-slate-400'}">${count}</span>
-                <button onclick="changeCount(${itemId}, 1)" class="w-5 h-5 flex items-center justify-center rounded bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300">+</button>
-            </div>`;
-        }
-
-        window.toggleField = function(id, field) {
-            const item = itemsData.find(i => i.id === id);
-            if (item) {
-                item[field] = !item[field];
-                // Auto sync count if astral is toggled
-                if (field === 'astral') {
-                    item.count = item.astral ? 4 : 0;
-                }
-                saveItemsData();
-                renderTable();
-            }
-        };
-
-        window.changeCount = function(id, delta) {
-            const item = itemsData.find(i => i.id === id);
-            if (item) {
-                item.count = Math.max(0, Math.min(4, item.count + delta));
-                if (item.count > 0) item.astral = true;
-                if (item.count === 0) item.astral = false;
-                saveItemsData();
-                renderTable();
-            }
-        };
-
-        function renderTable() {
-            const tbody = document.getElementById("items-table-body");
-            const emptyState = document.getElementById("empty-state");
-            tbody.innerHTML = "";
-
-            const filtered = itemsData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(currentSearch) || 
-                                    item.category.toLowerCase().includes(currentSearch) ||
-                                    item.id.toString().includes(currentSearch);
-                
-                const matchCategory = currentCategory === "ALL" || item.category === currentCategory;
-                
-                const completed = isItemComplete(item);
-                let matchStatus = true;
-                if (currentStatusFilter === "COMPLETE") matchStatus = completed;
-                if (currentStatusFilter === "INCOMPLETE") matchStatus = !completed;
-
-                return matchSearch && matchCategory && matchStatus;
-            });
-
-            document.getElementById("stat-showing").textContent = filtered.length;
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove("hidden");
-                return;
-            } else {
-                emptyState.classList.add("hidden");
-            }
-
-            filtered.forEach((item) => {
-                const tr = document.createElement("tr");
-                const completed = isItemComplete(item);
-                tr.className = `transition duration-150 border-b border-slate-800/50 ${completed ? 'bg-emerald-950/10 hover:bg-slate-800/40' : 'hover:bg-slate-800/40'}`;
-
-                tr.innerHTML = `
-                    <td class="py-3.5 px-6 text-center font-mono text-slate-500">${item.id}</td>
-                    <td class="py-3.5 px-6 font-bold text-slate-100">
-                        ${item.name}
-                    </td>
-                    <td class="py-3.5 px-6 text-center">
-                        <span class="px-2.5 py-1 rounded-md text-xs font-mono bg-slate-800 text-slate-300 border border-slate-700/60">
-                            ${item.category}
-                        </span>
-                    </td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadgeHtml(item.id, 'astral', item.astral)}</td>
-                    <td class="py-3.5 px-6 text-center">${getCountBadgeHtml(item.id, item.count)}</td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadgeHtml(item.id, 'divine', item.divine)}</td>
-                    <td class="py-3.5 px-6 text-center">${getStatusBadgeHtml(item.id, 'void', item.void)}</td>
-                `;
-
-                tbody.appendChild(tr);
-            });
-        }
-    </script>
+    renderGrid();
+  </script>
 </body>
 </html>
