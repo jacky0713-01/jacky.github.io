@@ -88,7 +88,7 @@
 
     .dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -110,6 +110,11 @@
       font-size: 1.5rem;
       font-weight: 700;
       color: var(--text-main);
+    }
+
+    .visitor-badge {
+      display: inline-block;
+      margin-top: 4px;
     }
 
     .toolbar {
@@ -647,6 +652,12 @@
       <div class="stat-title">Astral 總數量</div>
       <div id="stat-count-total" class="stat-value">0</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-title">👁️ 參觀人數統計</div>
+      <div class="visitor-badge">
+        <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fjacky0713-01.github.io&count_bg=%236366F1&title_bg=%231E293B&icon=&icon_color=%23E7E7E7&title=VISITS&edge_flat=false"/></a>
+      </div>
+    </div>
   </div>
 
   <div class="toolbar">
@@ -871,7 +882,7 @@
       updateTradingText();
     }
 
-    // 生成您指定的專屬 Discord 交易格式
+    // 生成專屬 Discord 交易格式
     function updateTradingText() {
       let lfList = [];
       let haveList = [];
@@ -882,13 +893,12 @@
         const item = itemsData[key];
         const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
 
-        // LF (Looking For / 未收集) - 顯示需要的種類 + "物品名稱"
+        // LF (未收集)
         if (!isUnlocked) {
-          // 預設提示為所需的類型 (如 Astral/Divine/Void)
           lfList.push(`Astral/Divine/Void "${item.name}"`);
         }
 
-        // I have (擁有多餘數量的物品) - 顯示 Astral +"物品名稱"+數量
+        // I have (多餘數量)
         if (item.astralCount > 1) {
           const extraCount = item.astralCount - 1;
           haveList.push(`Astral "${item.name}" x${extraCount}`);
@@ -904,7 +914,7 @@
       tradeTextOutput.value = tradeStr;
     }
 
-    // Modal 開關邏輯
+    // Modal 控制邏輯
     tradeBtn.onclick = () => {
       updateTradingText();
       tradeOverlay.classList.add("active");
