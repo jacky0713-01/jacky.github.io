@@ -244,6 +244,7 @@
       cursor: pointer;
     }
 
+    /* === 稀有度通用標籤 === */
     .rarity-tag {
       display: inline-block;
       padding: 4px 10px;
@@ -255,13 +256,14 @@
       text-transform: capitalize;
     }
 
-    /* --- 稀有度色彩標籤與設定 --- */
+    /* === 全稀有度專屬顏色設定 === */
     .rarity-common { color: #9e9e9e; background: rgba(158, 158, 158, 0.15); border: 1px solid #616161; }
     .rarity-uncommon { color: #4caf50; background: rgba(76, 175, 80, 0.15); border: 1px solid #388e3c; }
     .rarity-rare { color: #2196f3; background: rgba(33, 150, 243, 0.15); border: 1px solid #1976d2; }
     .rarity-epic { color: #ab47bc; background: rgba(171, 71, 188, 0.15); border: 1px solid #7b1fa2; }
     .rarity-legendary { color: #ffa726; background: rgba(255, 167, 38, 0.15); border: 1px solid #f57c00; }
-    .rarity-mythic { color: #ef5350; background: rgba(239, 83, 80, 0.15); border: 1px solid #d32f2f; }
+    .rarity-mythic, .rarity-mythical { color: #ef5350; background: rgba(239, 83, 80, 0.15); border: 1px solid #d32f2f; }
+    .rarity-mythic\+ { color: #ff1744; background: rgba(255, 23, 68, 0.2); border: 1px solid #d50000; box-shadow: 0 0 6px rgba(255, 23, 68, 0.4); }
     .rarity-cosmic { color: #26c6da; background: rgba(38, 198, 218, 0.15); border: 1px solid #0097a7; }
     .rarity-celestial { color: #ec407a; background: rgba(236, 64, 122, 0.15); border: 1px solid #c2185b; }
     .rarity-chronal { color: #00bcd4; background: rgba(0, 188, 212, 0.15); border: 1px solid #0097a7; }
@@ -272,6 +274,41 @@
     .rarity-veiled { color: #a855f7; background: rgba(168, 85, 247, 0.15); border: 1px solid #6b21a8; }
     .rarity-hallowed { color: #ec4899; background: rgba(236, 72, 153, 0.15); border: 1px solid #be185d; }
     .rarity-imperial { color: #f59e0b; background: rgba(245, 158, 11, 0.2); border: 1px solid #d97706; box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
+
+    /* === 新增稀有度色彩 === */
+    .rarity-godly, .rarity-godlike { color: #ffd700; background: rgba(255, 215, 0, 0.25); border: 1px solid #ffaa00; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+    .rarity-eternal { color: #10b981; background: rgba(16, 185, 129, 0.2); border: 1px solid #059669; }
+    .rarity-otherversal { color: #3b82f6; background: rgba(59, 130, 246, 0.2); border: 1px solid #1d4ed8; }
+    .rarity-genesis { color: #38bdf8; background: rgba(56, 189, 248, 0.2); border: 1px solid #0284c7; }
+    .rarity-zenith { color: #f43f5e; background: rgba(244, 63, 94, 0.2); border: 1px solid #e11d48; }
+    .rarity-solar { color: #f97316; background: rgba(249, 115, 22, 0.2); border: 1px solid #ea580c; }
+    .rarity-radiant { color: #fef08a; background: rgba(254, 240, 138, 0.25); border: 1px solid #eab308; }
+    .rarity-elysian { color: #a7f3d0; background: rgba(167, 243, 208, 0.2); border: 1px solid #10b981; }
+    .rarity-hyperion { color: #fbbf24; background: rgba(251, 191, 36, 0.2); border: 1px solid #d97706; }
+    .rarity-angelic { color: #e0f2fe; background: rgba(224, 242, 254, 0.2); border: 1px solid #38bdf8; }
+    .rarity-aurelian { color: #fde047; background: rgba(253, 224, 71, 0.2); border: 1px solid #ca8a04; }
+    .rarity-olympian { color: #fb923c; background: rgba(251, 146, 60, 0.2); border: 1px solid #c2410c; }
+    .rarity-promethean { color: #ef4444; background: rgba(239, 68, 68, 0.2); border: 1px solid #b91c1c; }
+    .rarity-chaos { color: #c084fc; background: rgba(192, 132, 252, 0.2); border: 1px solid #7e22ce; }
+    .rarity-arcane { color: #818cf8; background: rgba(129, 140, 248, 0.2); border: 1px solid #4338ca; }
+    .rarity-runic { color: #2dd4bf; background: rgba(45, 212, 191, 0.2); border: 1px solid #0f766e; }
+    .rarity-mystic { color: #a855f7; background: rgba(168, 85, 247, 0.2); border: 1px solid #7e22ce; }
+    .rarity-infernal { color: #dc2626; background: rgba(220, 38, 38, 0.25); border: 1px solid #991b1b; }
+    .rarity-fey { color: #4ade80; background: rgba(74, 222, 128, 0.2); border: 1px solid #15803d; }
+    .rarity-draconic { color: #b91c1c; background: rgba(185, 28, 28, 0.25); border: 1px solid #7f1d1d; }
+    .rarity-fabled { color: #f472b6; background: rgba(244, 114, 182, 0.2); border: 1px solid #be185d; }
+    .rarity-awakened { color: #38bdf8; background: rgba(56, 189, 248, 0.2); border: 1px solid #0369a1; }
+    .rarity-unbound { color: #e879f9; background: rgba(232, 121, 249, 0.2); border: 1px solid #a21caf; }
+    .rarity-kinetic { color: #facc15; background: rgba(250, 204, 21, 0.2); border: 1px solid #854d0e; }
+    .rarity-forged { color: #fb923c; background: rgba(251, 146, 60, 0.2); border: 1px solid #9a3412; }
+    .rarity-gilded { color: #fef08a; background: rgba(254, 240, 138, 0.25); border: 1px solid #ca8a04; }
+    .rarity-victorian { color: #a3e635; background: rgba(163, 230, 53, 0.15); border: 1px solid #4d7c0f; }
+    .rarity-regal { color: #e879f9; background: rgba(232, 121, 249, 0.2); border: 1px solid #86198f; }
+    .rarity-epochal { color: #94a3b8; background: rgba(148, 163, 184, 0.2); border: 1px solid #475569; }
+    .rarity-impossible { color: #ff0055; background: rgba(255, 0, 85, 0.25); border: 1px solid #990033; box-shadow: 0 0 8px rgba(255, 0, 85, 0.5); }
+    .rarity-perpetual { color: #34d399; background: rgba(52, 211, 153, 0.2); border: 1px solid #065f46; }
+    .rarity-colossal { color: #fbbf24; background: rgba(251, 191, 36, 0.2); border: 1px solid #b45309; }
+    .rarity-deus { color: #ffffff; background: rgba(255, 255, 255, 0.25); border: 1px solid #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); }
 
     .status-cell {
       text-align: center;
@@ -329,7 +366,7 @@
     }
 
     /* =========================================================
-       🎴 卡牌相簿模式 (Card Gallery) 與 稀有度專屬動態特效
+       🎴 卡牌相簿模式 (Card Gallery View) 與稀有度特效
     ========================================================= */
     .card-grid {
       display: grid;
@@ -357,7 +394,7 @@
       transform: translateY(-5px);
     }
 
-    /* 未解鎖 (Locked) - 黑影剪影 + 鎖頭 */
+    /* 未解鎖：剪影 + 鎖頭 */
     .item-card.locked {
       opacity: 0.6;
       background: #0d1322;
@@ -399,60 +436,74 @@
       transition: filter 0.3s ease;
     }
 
-    /* --- 各稀有度專屬解鎖特效 (Unlocked Rarity Visual Effects) --- */
-
-    /* 1. Imperial (至尊帝王金光) */
+    /* --- 解鎖稀有度專屬動態特效 (Unlocked FX Class) --- */
+    .item-card.unlocked.fx-godly,
+    .item-card.unlocked.fx-godlike,
+    .item-card.unlocked.fx-deus,
     .item-card.unlocked.fx-imperial {
-      border-color: #f59e0b;
-      background: linear-gradient(145deg, #1e293b 0%, #3a2202 100%);
-      box-shadow: 0 0 18px rgba(245, 158, 11, 0.6);
-      animation: fxImperialPulse 2.5s infinite alternate;
-    }
-    @keyframes fxImperialPulse {
-      0% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
-      100% { box-shadow: 0 0 24px rgba(245, 158, 11, 0.9), 0 0 8px rgba(255, 215, 0, 0.8); }
-    }
-
-    /* 2. Hallowed & Veiled & Void (虛空魅惑紫與粉紅脈衝) */
-    .item-card.unlocked.fx-hallowed,
-    .item-card.unlocked.fx-veiled,
-    .item-card.unlocked.fx-void {
-      border-color: #a855f7;
-      background: radial-gradient(circle, #270938 0%, #1e293b 100%);
-      box-shadow: 0 0 16px rgba(168, 85, 247, 0.6);
-      animation: fxVoidGlow 2s infinite alternate;
-    }
-    @keyframes fxVoidGlow {
-      0% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
-      100% { box-shadow: 0 0 22px rgba(236, 72, 153, 0.8); }
-    }
-
-    /* 3. Yokai & Celestial & Chronal (星辰幻藍與翡翠青光) */
-    .item-card.unlocked.fx-yokai,
-    .item-card.unlocked.fx-celestial,
-    .item-card.unlocked.fx-chronal,
-    .item-card.unlocked.fx-astral {
-      border-color: #00bcd4;
-      background: linear-gradient(145deg, #1e293b 0%, #032d38 100%);
-      box-shadow: 0 0 14px rgba(0, 188, 212, 0.5);
-    }
-
-    /* 4. Legendary & Divine (傳說金黃亮光) */
-    .item-card.unlocked.fx-legendary,
-    .item-card.unlocked.fx-divine {
       border-color: #ffd700;
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      background: linear-gradient(145deg, #1e293b 0%, #3a2202 100%);
+      box-shadow: 0 0 18px rgba(255, 215, 0, 0.7);
+      animation: fxGodlyGlow 2.5s infinite alternate;
+    }
+    @keyframes fxGodlyGlow {
+      0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
+      100% { box-shadow: 0 0 26px rgba(255, 215, 0, 0.9), 0 0 10px rgba(255, 255, 255, 0.8); }
     }
 
-    /* 5. Tempered & Honed & Rare (精良水藍) */
-    .item-card.unlocked.fx-tempered,
-    .item-card.unlocked.fx-honed,
-    .item-card.unlocked.fx-rare {
-      border-color: #388e3c;
-      box-shadow: 0 0 10px rgba(56, 142, 60, 0.4);
+    .item-card.unlocked.fx-zenith,
+    .item-card.unlocked.fx-impossible,
+    .item-card.unlocked.fx-mythic\+ {
+      border-color: #ff0055;
+      background: linear-gradient(145deg, #1e293b 0%, #3b0014 100%);
+      box-shadow: 0 0 16px rgba(255, 0, 85, 0.7);
+      animation: fxRedPulse 2s infinite alternate;
+    }
+    @keyframes fxRedPulse {
+      0% { box-shadow: 0 0 8px rgba(255, 0, 85, 0.4); }
+      100% { box-shadow: 0 0 22px rgba(255, 23, 68, 0.9); }
     }
 
-    /* 卡牌文字與標籤 */
+    .item-card.unlocked.fx-eternal,
+    .item-card.unlocked.fx-elysian,
+    .item-card.unlocked.fx-perpetual {
+      border-color: #10b981;
+      background: linear-gradient(145deg, #1e293b 0%, #022c22 100%);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.6);
+    }
+
+    .item-card.unlocked.fx-otherversal,
+    .item-card.unlocked.fx-genesis,
+    .item-card.unlocked.fx-awakened,
+    .item-card.unlocked.fx-cosmic {
+      border-color: #38bdf8;
+      background: linear-gradient(145deg, #1e293b 0%, #032d42 100%);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+    }
+
+    .item-card.unlocked.fx-chaos,
+    .item-card.unlocked.fx-unbound,
+    .item-card.unlocked.fx-mystic,
+    .item-card.unlocked.fx-void {
+      border-color: #c084fc;
+      background: radial-gradient(circle, #2d0a3d 0%, #1e293b 100%);
+      box-shadow: 0 0 16px rgba(192, 132, 252, 0.6);
+      animation: fxPurpleGlow 2s infinite alternate;
+    }
+    @keyframes fxPurpleGlow {
+      0% { box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
+      100% { box-shadow: 0 0 22px rgba(232, 121, 249, 0.8); }
+    }
+
+    .item-card.unlocked.fx-solar,
+    .item-card.unlocked.fx-promethean,
+    .item-card.unlocked.fx-infernal,
+    .item-card.unlocked.fx-draconic {
+      border-color: #f97316;
+      background: linear-gradient(145deg, #1e293b 0%, #3d1302 100%);
+      box-shadow: 0 0 14px rgba(249, 115, 22, 0.6);
+    }
+
     .card-id {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -656,10 +707,12 @@
         const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
         if (!matchSearch) return;
 
-        const rarityClass = item.rarity ? `rarity-${item.rarity.toLowerCase()}` : 'rarity-common';
+        // 安全處理 Class 名稱中的特殊字元（如 Mythic+）
+        const safeRarityName = item.rarity ? item.rarity.toLowerCase().replace(/[^a-z0-9]/g, '\\$&') : 'common';
+        const rarityClass = `rarity-${safeRarityName}`;
         const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
 
-        // 1. 渲染表格模式
+        // 1. 渲染表格列
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>#${item.id}</strong></td>
@@ -691,8 +744,8 @@
         `;
         tbody.appendChild(tr);
 
-        // 2. 渲染卡牌相簿模式 (套用專屬稀有度特效 Class)
-        const fxClass = item.rarity ? `fx-${item.rarity.toLowerCase()}` : '';
+        // 2. 渲染卡牌相簿（套用稀有度 FX）
+        const fxClass = item.rarity ? `fx-${item.rarity.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
 
         const card = document.createElement("div");
         card.className = `item-card ${isUnlocked ? 'unlocked' : 'locked'} ${fxClass}`;
@@ -719,7 +772,7 @@
       document.getElementById("stat-count-total").innerText = astralCountSum;
     }
 
-    // 視圖模式切換事件
+    // 視圖切換事件
     btnViewTable.onclick = () => {
       btnViewTable.classList.add("active");
       btnViewCard.classList.remove("active");
