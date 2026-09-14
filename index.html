@@ -167,7 +167,7 @@
       background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* 放大圖片外框尺寸與樣式 */
+    /* 圖片外框與邊距調整 */
     .item-img-container {
       width: 72px;
       height: 72px;
@@ -330,8 +330,8 @@
       <thead>
         <tr>
           <th style="width: 70px;">編號</th>
-          <th style="width: 180px;">物品名稱</th>
-          <th style="width: 120px; text-align: center;">圖片</th>
+          <th style="width: 140px;">物品名稱</th>
+          <th style="width: 100px; text-align: left; padding-left: 10px;">圖片</th>
           <th style="width: 130px;">稀有度</th>
           <th style="width: 120px; text-align: center;">ASTRAL</th>
           <th style="width: 130px; text-align: center;">ASTRAL COUNT</th>
@@ -435,8 +435,8 @@
         tr.innerHTML = `
           <td><strong>#${item.id}</strong></td>
           <td class="editable-cell" ondblclick="editField('${key}', 'name')" title="登入後雙擊修改名稱"><strong>${item.name}</strong></td>
-          <td class="editable-cell" style="text-align: center;" ondblclick="editField('${key}', 'imageUrl')" title="登入後雙擊設定圖片網址">
-            <div class="item-img-container" style="margin: 0 auto;">
+          <td class="editable-cell" style="text-align: left; padding-left: 10px;" ondblclick="editField('${key}', 'imageUrl')" title="登入後雙擊設定圖片網址">
+            <div class="item-img-container">
               ${item.imageUrl ? `<img src="${item.imageUrl}" class="item-img" alt="${item.name}">` : `<span class="img-placeholder">+圖片</span>`}
             </div>
           </td>
