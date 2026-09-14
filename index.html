@@ -39,14 +39,52 @@
       gap: 16px;
     }
 
+    /* =========================================================
+       ✨ 華麗頂部標題動畫特效 (Glorious Header Effects)
+    ========================================================= */
     .title-group h1 {
       margin: 0;
       font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      background: linear-gradient(to right, #818cf8, #c084fc);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      
+      /* 多重霓光漸變背景 */
+      background: linear-gradient(
+        120deg, 
+        #818cf8 0%, 
+        #c084fc 25%, 
+        #f43f5e 50%, 
+        #fde047 75%, 
+        #38bdf8 100%
+      );
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      
+      /* 動態霓虹文字發光與流動動畫 */
+      animation: titleGradientFlow 6s ease infinite, titleGlowPulse 2.5s ease-in-out infinite alternate;
+      position: relative;
+      display: inline-block;
+    }
+
+    /* 漸變流動 */
+    @keyframes titleGradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* 脈衝發光 */
+    @keyframes titleGlowPulse {
+      0% {
+        filter: drop-shadow(0 0 5px rgba(129, 140, 248, 0.4)) 
+                drop-shadow(0 0 12px rgba(192, 132, 252, 0.3));
+      }
+      100% {
+        filter: drop-shadow(0 0 12px rgba(244, 63, 94, 0.7)) 
+                drop-shadow(0 0 25px rgba(56, 189, 248, 0.6))
+                drop-shadow(0 0 35px rgba(253, 224, 71, 0.4));
+      }
     }
 
     .auth-box {
@@ -621,7 +659,7 @@
 
   <header>
     <div class="title-group">
-      <h1>新竹九降風清水疾風俠Roblox Throw a Coin — Collection Index Tracker</h1>
+      <h1>新竹九降風清水疾風俠 Roblox Throw a Coin — Collection Index Tracker</h1>
     </div>
     <div class="auth-box">
       <button id="trade-btn" class="btn btn-success" style="margin-right: 8px;">🤝 交易助手</button>
@@ -740,7 +778,6 @@
         }
       })
       .catch(() => {
-        // 備用隨機模擬，避免影響介面顯示
         document.getElementById('stat-visits').innerText = '1';
       });
 
