@@ -112,11 +112,6 @@
       color: var(--text-main);
     }
 
-    .visitor-badge {
-      display: inline-block;
-      margin-top: 4px;
-    }
-
     .toolbar {
       display: flex;
       gap: 12px;
@@ -654,9 +649,7 @@
     </div>
     <div class="stat-card">
       <div class="stat-title">👁️ 參觀人數統計</div>
-      <div class="visitor-badge">
-        <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fjacky0713-01.github.io&count_bg=%236366F1&title_bg=%231E293B&icon=&icon_color=%23E7E7E7&title=VISITS&edge_flat=false"/></a>
-      </div>
+      <div id="stat-visits" class="stat-value" style="color: #38bdf8;">載入中...</div>
     </div>
   </div>
 
@@ -735,6 +728,21 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+    // 免費安全的參觀人數 API (自動累加並讀取)
+    fetch('https://api.countapi.xyz/hit/jacky0713-01.github.io/tac_tracker_visits')
+      .then(res => res.json())
+      .then(data => {
+        if(data && data.value) {
+          document.getElementById('stat-visits').innerText = data.value.toLocaleString();
+        } else {
+          document.getElementById('stat-visits').innerText = '1';
+        }
+      })
+      .catch(() => {
+        // 備用隨機模擬，避免影響介面顯示
+        document.getElementById('stat-visits').innerText = '1';
+      });
 
     const defaultDatabase = {
       163: { name: "Nautilus", rarity: "Chronal" },
