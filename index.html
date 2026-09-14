@@ -83,6 +83,8 @@
     .btn-warning:hover { background-color: #ca8a04; }
     .btn-danger { background-color: #ef4444; }
     .btn-danger:hover { background-color: #dc2626; }
+    .btn-success { background-color: #10b981; color: #fff; }
+    .btn-success:hover { background-color: #059669; }
 
     .dashboard {
       display: grid;
@@ -275,7 +277,6 @@
     .rarity-hallowed { color: #ec4899; background: rgba(236, 72, 153, 0.15); border: 1px solid #be185d; }
     .rarity-imperial { color: #f59e0b; background: rgba(245, 158, 11, 0.2); border: 1px solid #d97706; box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
 
-    /* === 新增稀有度色彩 === */
     .rarity-godly, .rarity-godlike { color: #ffd700; background: rgba(255, 215, 0, 0.25); border: 1px solid #ffaa00; box-shadow: 0 0 10px rgba(255, 215, 0, 0.4); }
     .rarity-eternal { color: #10b981; background: rgba(16, 185, 129, 0.2); border: 1px solid #059669; }
     .rarity-otherversal { color: #3b82f6; background: rgba(59, 130, 246, 0.2); border: 1px solid #1d4ed8; }
@@ -366,7 +367,7 @@
     }
 
     /* =========================================================
-       🎴 卡牌相簿模式 (Card Gallery View) 與稀有度特效
+       🎴 卡牌相簿模式 (Card Gallery View) 與特效
     ========================================================= */
     .card-grid {
       display: grid;
@@ -394,7 +395,6 @@
       transform: translateY(-5px);
     }
 
-    /* 未解鎖：剪影 + 鎖頭 */
     .item-card.locked {
       opacity: 0.6;
       background: #0d1322;
@@ -436,7 +436,7 @@
       transition: filter 0.3s ease;
     }
 
-    /* --- 解鎖稀有度專屬動態特效 (Unlocked FX Class) --- */
+    /* --- 解鎖稀有度動態特效 --- */
     .item-card.unlocked.fx-godly,
     .item-card.unlocked.fx-godlike,
     .item-card.unlocked.fx-deus,
@@ -542,6 +542,78 @@
     .card-badge-item.active-astral { background: rgba(99, 102, 241, 0.25); color: #818cf8; border: 1px solid #6366f1; }
     .card-badge-item.active-divine { background: rgba(234, 179, 8, 0.25); color: #fde047; border: 1px solid #eab308; }
     .card-badge-item.active-void { background: rgba(168, 85, 247, 0.25); color: #c084fc; border: 1px solid #a855f7; }
+
+    /* =========================================================
+       🤝 交易助手 (Trading Helper) 彈窗與面板樣式
+    ========================================================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .trade-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 650px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--text-main);
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .trade-textarea {
+      width: 100%;
+      height: 160px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #38bdf8;
+      font-family: monospace;
+      padding: 12px;
+      font-size: 0.9rem;
+      resize: vertical;
+      outline: none;
+      margin-bottom: 16px;
+    }
+
+    .trade-textarea:focus {
+      border-color: var(--accent);
+    }
   </style>
 </head>
 <body class="read-only">
@@ -551,6 +623,7 @@
       <h1>Roblox Throw a Coin — Collection Index Tracker</h1>
     </div>
     <div class="auth-box">
+      <button id="trade-btn" class="btn btn-success" style="margin-right: 8px;">🤝 交易助手</button>
       <span id="auth-status" class="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
       <button id="auth-btn" class="btn">管理員登入</button>
     </div>
@@ -613,6 +686,23 @@
 
   <!-- 卡牌相簿區域 -->
   <div id="card-view-container" class="card-grid" style="display: none;">
+  </div>
+
+  <!-- 🤝 交易助手 Modal 面板 -->
+  <div id="trade-modal-overlay" class="modal-overlay">
+    <div class="trade-modal">
+      <div class="modal-header">
+        <h2>🤝 Discord 交易格式產生器</h2>
+        <button id="modal-close-btn" class="modal-close">&times;</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+        自動掃描您的圖鑑，將<strong>多餘 (Astral > 1)</strong> 的物品標註為 [H] Have，<strong>未獲得</strong>的物品標註為 [W] Want：
+      </p>
+      <textarea id="trade-text-output" class="trade-textarea" readonly></textarea>
+      <div style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button id="copy-trade-btn" class="btn btn-success">📋 複製 Discord 文字</button>
+      </div>
+    </div>
   </div>
 
   <script type="module">
@@ -684,6 +774,13 @@
     const btnViewTable = document.getElementById("btn-view-table");
     const btnViewCard = document.getElementById("btn-view-card");
 
+    // 交易助手控制 DOM
+    const tradeBtn = document.getElementById("trade-btn");
+    const tradeOverlay = document.getElementById("trade-modal-overlay");
+    const closeModalBtn = document.getElementById("modal-close-btn");
+    const tradeTextOutput = document.getElementById("trade-text-output");
+    const copyTradeBtn = document.getElementById("copy-trade-btn");
+
     function render() {
       const query = searchInput.value.toLowerCase().trim();
       tbody.innerHTML = "";
@@ -707,7 +804,6 @@
         const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
         if (!matchSearch) return;
 
-        // 安全處理 Class 名稱中的特殊字元（如 Mythic+）
         const safeRarityName = item.rarity ? item.rarity.toLowerCase().replace(/[^a-z0-9]/g, '\\$&') : 'common';
         const rarityClass = `rarity-${safeRarityName}`;
         const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
@@ -744,7 +840,7 @@
         `;
         tbody.appendChild(tr);
 
-        // 2. 渲染卡牌相簿（套用稀有度 FX）
+        // 2. 渲染卡牌相簿
         const fxClass = item.rarity ? `fx-${item.rarity.toLowerCase().replace(/[^a-z0-9]/g, '')}` : '';
 
         const card = document.createElement("div");
@@ -770,7 +866,62 @@
       document.getElementById("stat-divine").innerText = `${divineCollected} / ${TOTAL_ITEMS} (${((divineCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${((voidCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-count-total").innerText = astralCountSum;
+
+      updateTradingText();
     }
+
+    // 產生 Discord 交易對應格式文字
+    function updateTradingText() {
+      let haveList = [];
+      let wantList = [];
+
+      const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
+
+      sortedKeys.forEach(key => {
+        const item = itemsData[key];
+        const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
+
+        // 多餘的數量 (Have)
+        if (item.astralCount > 1) {
+          const extra = item.astralCount - 1;
+          haveList.push(`${item.name} #${item.id} (x${extra})`);
+        }
+
+        // 尚未收集到的 (Want)
+        if (!isUnlocked) {
+          wantList.push(`${item.name} #${item.id}`);
+        }
+      });
+
+      let tradeStr = `**[Throw a Coin Trade]**\n\n`;
+      tradeStr += `**[H] HAVE:**\n${haveList.length > 0 ? haveList.join(', ') : 'None'}\n\n`;
+      tradeStr += `**[W] WANT:**\n${wantList.length > 0 ? wantList.join(', ') : 'None'}`;
+
+      tradeTextOutput.value = tradeStr;
+    }
+
+    // 交易 Modal 打開與關閉控制
+    tradeBtn.onclick = () => {
+      updateTradingText();
+      tradeOverlay.classList.add("active");
+    };
+
+    closeModalBtn.onclick = () => {
+      tradeOverlay.classList.remove("active");
+    };
+
+    tradeOverlay.onclick = (e) => {
+      if (e.target === tradeOverlay) tradeOverlay.classList.remove("active");
+    };
+
+    copyTradeBtn.onclick = () => {
+      tradeTextOutput.select();
+      navigator.clipboard.writeText(tradeTextOutput.value).then(() => {
+        const originalText = copyTradeBtn.innerText;
+        copyTradeBtn.innerText = "✓ 已成功複製！";
+        setTimeout(() => { copyTradeBtn.innerText = originalText; }, 2000);
+      });
+    };
 
     // 視圖切換事件
     btnViewTable.onclick = () => {
