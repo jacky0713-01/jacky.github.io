@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roblox 物品收集圖鑑 (188項)</title>
+  <title>Roblox 188 物品收集圖鑑表格</title>
   <style>
     :root {
       --bg-color: #121212;
       --card-bg: #1e1e1e;
-      --accent-color: #bb86fc;
+      --header-bg: #1f313f;
       --text-color: #e0e0e0;
-      --completed-color: #03dac6;
+      --border-color: #333333;
+      --accent-color: #bb86fc;
+      --collected-bg: #1a2a22;
+      --collected-text: #03dac6;
     }
 
     body {
@@ -53,69 +56,97 @@
 
     button:hover { opacity: 0.9; }
 
-    /* 唯讀模式控制：未登入時禁止編輯卡片與勾選 */
-    body.read-only .item-card {
-      pointer-events: none;
-      opacity: 0.85;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .item-card {
+    /* 表格樣式 */
+    .table-container {
+      overflow-x: auto;
       background-color: var(--card-bg);
-      border: 2px solid #333;
       border-radius: 8px;
-      padding: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: var(--header-bg);
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #181818;
+    }
+
+    /* 狀態與互動樣式 */
+    .status-cell {
       cursor: pointer;
       user-select: none;
-      transition: all 0.2s ease;
+      transition: background-color 0.2s;
     }
 
-    .item-card.completed {
-      border-color: var(--completed-color);
-      background-color: #1a2725;
-    }
-
-    .item-category {
-      font-size: 0.75rem;
-      color: #888;
-      margin-bottom: 4px;
-    }
-
-    .item-name {
+    .status-cell.collected {
+      background-color: var(--collected-bg);
+      color: var(--collected-text);
       font-weight: bold;
-      margin-bottom: 8px;
     }
 
-    .status-badge {
-      font-size: 0.8rem;
-      color: var(--completed-color);
+    .count-cell {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* 唯讀模式控制：未登入時禁止編輯表格 */
+    body.read-only .status-cell,
+    body.read-only .count-cell {
+      pointer-events: none;
     }
   </style>
 </head>
 <body class="read-only">
 
   <header>
-    <h1>Roblox 188 物品進度追蹤器</h1>
+    <h1>Roblox 188 物品收集圖鑑</h1>
     <div class="auth-box">
       <span id="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
       <button id="auth-btn">管理員登入</button>
     </div>
   </header>
 
-  <div class="grid-container" id="item-grid"></div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>編號</th>
+          <th>物品名稱</th>
+          <th>稀有度</th>
+          <th>Astral</th>
+          <th>Astral Count</th>
+          <th>Divine</th>
+          <th>Void</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- 資料由 JS 動態生成 -->
+      </tbody>
+    </table>
+  </div>
 
   <!-- 引入 Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // 你的 Firebase 金鑰設定 (已自動為你填入專案資訊)
+    // 已套用您提供的新 API Key
     const firebaseConfig = {
       apiKey: "AIzaSyBh4wNEwXzGOxKOJqj3Akg7gj1WxFHzmNQ",
       authDomain: "throw-a-coin.firebaseapp.com",
@@ -130,65 +161,126 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // 產生 188 項範例物品資料
+    // 預設物品資料 (包含截圖中的物品名稱與稀有度範例)
+    const presetNames = {
+      163: { name: "Nautilus", rarity: "Chronal" },
+      164: { name: "Training Dummy", rarity: "Carved" },
+      165: { name: "Golden Fan", rarity: "Carved" },
+      166: { name: "Bonsai Tree", rarity: "Carved" },
+      167: { name: "Lucky Medallion", rarity: "Carved" },
+      168: { name: "War Drum", rarity: "Honed" },
+      169: { name: "Shuriken", rarity: "Honed" },
+      170: { name: "Stone Lantern", rarity: "Honed" },
+      171: { name: "Katana", rarity: "Tempered" },
+      172: { name: "Emperor Crown", rarity: "Tempered" },
+      173: { name: "Sacred Vase", rarity: "Tempered" },
+      174: { name: "Oni Mask", rarity: "Yokai" },
+      175: { name: "Oni Hammer", rarity: "Yokai" },
+      176: { name: "Torii Gate", rarity: "Veiled" },
+      177: { name: "Imperial Throne", rarity: "Veiled" },
+      178: { name: "Dojo", rarity: "Hallowed" },
+      179: { name: "Great Pagoda", rarity: "Hallowed" },
+      180: { name: "Dragon Temple", rarity: "Imperial" },
+      181: { name: "Imperial Seal", rarity: "Imperial" }
+    };
+
     const TOTAL_ITEMS = 188;
     let itemsData = {};
+
+    // 初始化 1~188 資料庫範本
     for (let i = 1; i <= TOTAL_ITEMS; i++) {
-      itemsData[`item_${i}`] = { id: i, name: `物品 #${i}`, category: `分類 ${Math.ceil(i / 20)}`, completed: false };
+      const preset = presetNames[i] || {};
+      itemsData[`item_${i}`] = {
+        id: i,
+        name: preset.name || `物品 #${i}`,
+        rarity: preset.rarity || `Common`,
+        astral: false,
+        astralCount: 0,
+        divine: false,
+        void: false
+      };
     }
 
-    const grid = document.getElementById("item-grid");
+    const tbody = document.getElementById("table-body");
     const authBtn = document.getElementById("auth-btn");
     const authStatus = document.getElementById("auth-status");
 
-// 渲染 UI 列表 (已修正：強制按 ID 數字 1 ~ 188 正確排序)
-    function renderGrid() {
-      grid.innerHTML = "";
+    // 渲染表格
+    function renderTable() {
+      tbody.innerHTML = "";
       
-      // 將資料轉為陣列並按 id 從小到大排序
       const sortedItems = Object.keys(itemsData)
         .map(key => ({ key, ...itemsData[key] }))
         .sort((a, b) => a.id - b.id);
 
       sortedItems.forEach(item => {
-        const card = document.createElement("div");
-        card.className = `item-card ${item.completed ? 'completed' : ''}`;
-        card.onclick = () => toggleItem(item.key);
-        card.innerHTML = `
-          <div class="item-category">${item.category}</div>
-          <div class="item-name">${item.name}</div>
-          <div class="status-badge">${item.completed ? '✓ 已收集' : '未完成'}</div>
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.name}</td>
+          <td>${item.rarity}</td>
+          <td class="status-cell ${item.astral ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'astral')">
+            ${item.astral ? '已收集' : ''}
+          </td>
+          <td class="count-cell" onclick="editCount('${item.key}')">
+            ${item.astralCount !== undefined ? item.astralCount : 0}
+          </td>
+          <td class="status-cell ${item.divine ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'divine')">
+            ${item.divine ? '已收集' : ''}
+          </td>
+          <td class="status-cell ${item.void ? 'collected' : ''}" onclick="toggleStatus('${item.key}', 'void')">
+            ${item.void ? '已收集' : ''}
+          </td>
         `;
-        grid.appendChild(card);
+        tbody.appendChild(tr);
       });
     }
 
-    // 點擊切換收集狀態 (只有登入後可修改並同步雲端)
-    async function toggleItem(key) {
+    // 切換狀態 (Astral, Divine, Void)
+    window.toggleStatus = async (key, type) => {
       if (!auth.currentUser) return;
-      itemsData[key].completed = !itemsData[key].completed;
-      renderGrid();
-      
-      // 同步到 Firestore 雲端資料庫
+      itemsData[key][type] = !itemsData[key][type];
+      renderTable();
+      await syncToCloud();
+    };
+
+    // 修改 Astral Count 數量
+    window.editCount = async (key) => {
+      if (!auth.currentUser) return;
+      const currentVal = itemsData[key].astralCount || 0;
+      const newVal = prompt(`請輸入 ${itemsData[key].name} 的 Astral Count 數量：`, currentVal);
+      if (newVal !== null && !isNaN(newVal)) {
+        itemsData[key].astralCount = parseInt(newVal, 10);
+        renderTable();
+        await syncToCloud();
+      }
+    };
+
+    // 同步到 Firestore 雲端資料庫
+    async function syncToCloud() {
       try {
         await setDoc(doc(db, "tracker", "progress"), { items: itemsData }, { merge: true });
       } catch (e) {
-        console.error("寫入資料庫失敗：", e);
+        console.error("同步失敗：", e);
       }
     }
 
-    // 監聽雲端資料庫更新 (任何裝置更新，網頁即時同步)
+    // 監聽雲端資料庫更新 (即時同步)
     onSnapshot(doc(db, "tracker", "progress"), (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.items) {
-          itemsData = data.items;
-          renderGrid();
+          Object.keys(data.items).forEach(key => {
+            if (itemsData[key]) {
+              itemsData[key] = { ...itemsData[key], ...data.items[key] };
+            }
+          });
+          renderTable();
         }
       }
     });
 
-    // 監聽登入狀態改變
+    // 監聽登入狀態
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.body.classList.remove("read-only");
@@ -201,7 +293,7 @@
       }
     });
 
-    // 登入 / 登出 按鈕事件
+    // 登入 / 登出
     authBtn.onclick = async () => {
       if (auth.currentUser) {
         await signOut(auth);
@@ -212,7 +304,7 @@
         if (email && password) {
           try {
             await signInWithEmailAndPassword(auth, email, password);
-            alert("登入成功！已解鎖編輯權限。");
+            alert("登入成功！已解鎖表格編輯功能。");
           } catch (err) {
             alert("登入失敗：帳號或密碼錯誤！");
           }
@@ -220,7 +312,7 @@
       }
     };
 
-    renderGrid();
+    renderTable();
   </script>
 </body>
 </html>
