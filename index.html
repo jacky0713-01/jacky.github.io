@@ -77,6 +77,8 @@
     }
 
     .btn:hover { background-color: var(--accent-hover); }
+    .btn-secondary { background-color: #334155; }
+    .btn-secondary:hover { background-color: #475569; }
     .btn-danger { background-color: #ef4444; }
     .btn-danger:hover { background-color: #dc2626; }
 
@@ -111,6 +113,7 @@
       gap: 12px;
       margin-bottom: 16px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .search-input {
@@ -125,6 +128,17 @@
       min-width: 200px;
     }
     .search-input:focus { border-color: var(--accent); }
+
+    /* 預設隱藏管理員專屬控制區（如匯出按鈕） */
+    .admin-only {
+      display: none;
+    }
+
+    /* 登入管理員後才顯示隱藏內容 */
+    body:not(.read-only) .admin-only {
+      display: inline-flex;
+      gap: 12px;
+    }
 
     .table-container {
       overflow-x: auto;
@@ -167,7 +181,6 @@
       background-color: rgba(255, 255, 255, 0.03);
     }
 
-    /* 圖片外框與邊距調整 */
     .item-img-container {
       width: 72px;
       height: 72px;
@@ -323,6 +336,10 @@
 
   <div class="toolbar">
     <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後雙擊名稱/圖片/稀有度可編輯)...">
+    <div class="admin-only">
+      <button id="export-csv-btn" class="btn btn-secondary">📥 匯出 CSV (Excel)</button>
+      <button id="export-json-btn" class="btn btn-secondary">💾 備份 JSON</button>
+    </div>
   </div>
 
   <div class="table-container">
@@ -529,6 +546,55 @@
         }
       }
     });
+
+    // 匯出 CSV (權限驗證：必須登入)
+    document.getElementById("export-csv-btn").onclick = () => {
+      if (!auth.currentUser) {
+        alert("請先進行管理員登入後再進行匯出！");
+        return;
+      }
+      let csvContent = "\uFEFF編號,物品名稱,稀有度,Astral,Astral數量,Divine,Void,圖片網址\n";
+      const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
+      
+      sortedKeys.forEach(key => {
+        const item = itemsData[key];
+        const row = [
+          item.id,
+          `"${item.name.replace(/"/g, '""')}"`,
+          `"${item.rarity}"`,
+          item.astral ? "已收集" : "未收集",
+          item.astralCount || 0,
+          item.divine ? "已收集" : "未收集",
+          item.void ? "已收集" : "未收集",
+          `"${item.imageUrl || ''}"`
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `TAC_Collection_Backup_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    // 匯出 JSON (權限驗證：必須登入)
+    document.getElementById("export-json-btn").onclick = () => {
+      if (!auth.currentUser) {
+        alert("請先進行管理員登入後再進行匯出！");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(itemsData, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `TAC_Collection_Data_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    };
 
     searchInput.addEventListener("input", render);
 
