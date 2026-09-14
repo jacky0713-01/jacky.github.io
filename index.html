@@ -156,14 +156,48 @@
     }
 
     td {
-      padding: 12px 16px;
+      padding: 10px 16px;
       border-bottom: 1px solid var(--border-color);
       font-size: 0.95rem;
       color: var(--text-main);
+      vertical-align: middle;
     }
 
     tr:hover td {
       background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    /* 圖片樣式與懸停放大效果 */
+    .item-img-container {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px dashed var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .item-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s;
+    }
+
+    .item-img-container:hover .item-img {
+      transform: scale(1.6);
+      z-index: 20;
+    }
+
+    .img-placeholder {
+      font-size: 0.75rem;
+      color: #475569;
+      text-align: center;
     }
 
     /* 可編輯提示樣式 */
@@ -172,19 +206,36 @@
       cursor: pointer;
     }
 
+    /* 稀有度顏色豐富設置 */
     .rarity-tag {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-muted);
+      text-transform: capitalize;
     }
-    .rarity-Imperial { color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
-    .rarity-Hallowed { color: #ec4899; background: rgba(236, 72, 153, 0.15); }
-    .rarity-Veiled { color: #a855f7; background: rgba(168, 85, 247, 0.15); }
-    .rarity-Yokai { color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+
+    /* 各種稀有度專屬顏色 */
+    .rarity-common { color: #9e9e9e; background: rgba(158, 158, 158, 0.15); border: 1px solid #616161; }
+    .rarity-uncommon { color: #4caf50; background: rgba(76, 175, 80, 0.15); border: 1px solid #388e3c; }
+    .rarity-rare { color: #2196f3; background: rgba(33, 150, 243, 0.15); border: 1px solid #1976d2; }
+    .rarity-epic { color: #ab47bc; background: rgba(171, 71, 188, 0.15); border: 1px solid #7b1fa2; }
+    .rarity-legendary { color: #ffa726; background: rgba(255, 167, 38, 0.15); border: 1px solid #f57c00; }
+    .rarity-mythic { color: #ef5350; background: rgba(239, 83, 80, 0.15); border: 1px solid #d32f2f; }
+    .rarity-cosmic { color: #26c6da; background: rgba(38, 198, 218, 0.15); border: 1px solid #0097a7; }
+    .rarity-celestial { color: #ec407a; background: rgba(236, 64, 122, 0.15); border: 1px solid #c2185b; }
+    
+    .rarity-chronal { color: #00bcd4; background: rgba(0, 188, 212, 0.15); border: 1px solid #0097a7; }
+    .rarity-carved { color: #8d6e63; background: rgba(141, 110, 99, 0.15); border: 1px solid #5d4037; }
+    .rarity-honed { color: #78909c; background: rgba(120, 144, 156, 0.15); border: 1px solid #455a64; }
+    .rarity-tempered { color: #26a69a; background: rgba(38, 166, 154, 0.15); border: 1px solid #00796b; }
+    .rarity-yokai { color: #3b82f6; background: rgba(59, 130, 246, 0.15); border: 1px solid #1d4ed8; }
+    .rarity-veiled { color: #a855f7; background: rgba(168, 85, 247, 0.15); border: 1px solid #6b21a8; }
+    .rarity-hallowed { color: #ec4899; background: rgba(236, 72, 153, 0.15); border: 1px solid #be185d; }
+    .rarity-imperial { color: #f59e0b; background: rgba(245, 158, 11, 0.2); border: 1px solid #d97706; box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
 
     .status-cell {
       text-align: center;
@@ -274,20 +325,21 @@
   </div>
 
   <div class="toolbar">
-    <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後可雙擊名稱改名)...">
+    <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後雙擊名稱/圖片/稀有度可編輯)...">
   </div>
 
   <div class="table-container">
     <table>
       <thead>
         <tr>
-          <th style="width: 80px;">編號</th>
-          <th>物品名稱 (雙擊可修改)</th>
-          <th style="width: 140px;">稀有度 (雙擊可修改)</th>
-          <th style="width: 130px; text-align: center;">Astral</th>
-          <th style="width: 140px; text-align: center;">Astral Count</th>
-          <th style="width: 130px; text-align: center;">Divine</th>
-          <th style="width: 130px; text-align: center;">Void</th>
+          <th style="width: 70px;">編號</th>
+          <th style="width: 200px;">物品名稱</th>
+          <th style="width: 80px; text-align: center;">圖片</th>
+          <th style="width: 130px;">稀有度</th>
+          <th style="width: 120px; text-align: center;">Astral</th>
+          <th style="width: 130px; text-align: center;">Astral Count</th>
+          <th style="width: 120px; text-align: center;">Divine</th>
+          <th style="width: 120px; text-align: center;">Void</th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -345,6 +397,7 @@
         id: i,
         name: preset.name || `物品 #${i}`,
         rarity: preset.rarity || `Common`,
+        imageUrl: "",
         astral: false,
         astralCount: 0,
         divine: false,
@@ -379,11 +432,21 @@
         const matchSearch = item.name.toLowerCase().includes(query) || String(item.id).includes(query);
         if (!matchSearch) return;
 
+        // 計算稀有度 class 名稱 (轉小寫處理)
+        const rarityClass = item.rarity ? `rarity-${item.rarity.toLowerCase()}` : 'rarity-common';
+
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>#${item.id}</strong></td>
           <td class="editable-cell" ondblclick="editField('${key}', 'name')" title="登入後雙擊修改名稱"><strong>${item.name}</strong></td>
-          <td class="editable-cell" ondblclick="editField('${key}', 'rarity')" title="登入後雙擊修改稀有度"><span class="rarity-tag rarity-${item.rarity}">${item.rarity}</span></td>
+          <td class="editable-cell" style="text-align: center;" ondblclick="editField('${key}', 'imageUrl')" title="登入後雙擊設定圖片網址">
+            <div class="item-img-container" style="margin: 0 auto;">
+              ${item.imageUrl ? `<img src="${item.imageUrl}" class="item-img" alt="${item.name}">` : `<span class="img-placeholder">+圖片</span>`}
+            </div>
+          </td>
+          <td class="editable-cell" ondblclick="editField('${key}', 'rarity')" title="登入後雙擊修改稀有度">
+            <span class="rarity-tag ${rarityClass}">${item.rarity}</span>
+          </td>
           <td class="status-cell" onclick="toggleStatus('${key}', 'astral')">
             <span class="badge ${item.astral ? 'badge-collected' : 'badge-empty'}">${item.astral ? '✓ 已收集' : '-'}</span>
           </td>
@@ -410,13 +473,13 @@
       document.getElementById("stat-count-total").innerText = astralCountSum;
     }
 
-    // 雙擊修改名稱 / 稀有度
+    // 雙擊修改名稱 / 圖片網址 / 稀有度
     window.editField = async (key, field) => {
       if (!auth.currentUser) return;
-      const fieldLabel = field === 'name' ? '物品名稱' : '稀有度';
+      let labelMap = { name: '物品名稱', imageUrl: '圖片網址 (URL)', rarity: '稀有度' };
       const currentVal = itemsData[key][field] || '';
-      const newVal = prompt(`請輸入新的 ${fieldLabel}（編號 #${itemsData[key].id}）：`, currentVal);
-      if (newVal !== null && newVal.trim() !== '') {
+      const newVal = prompt(`請輸入新的 ${labelMap[field]}（編號 #${itemsData[key].id}）：`, currentVal);
+      if (newVal !== null) {
         itemsData[key][field] = newVal.trim();
         render();
         await syncToCloud();
