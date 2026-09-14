@@ -131,6 +131,32 @@
     }
     .search-input:focus { border-color: var(--accent); }
 
+    .view-toggle-container {
+      display: flex;
+      gap: 8px;
+      background: var(--card-bg);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .view-btn.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
     .admin-only {
       display: none;
     }
@@ -237,7 +263,6 @@
     .rarity-mythic { color: #ef5350; background: rgba(239, 83, 80, 0.15); border: 1px solid #d32f2f; }
     .rarity-cosmic { color: #26c6da; background: rgba(38, 198, 218, 0.15); border: 1px solid #0097a7; }
     .rarity-celestial { color: #ec407a; background: rgba(236, 64, 122, 0.15); border: 1px solid #c2185b; }
-    
     .rarity-chronal { color: #00bcd4; background: rgba(0, 188, 212, 0.15); border: 1px solid #0097a7; }
     .rarity-carved { color: #8d6e63; background: rgba(141, 110, 99, 0.15); border: 1px solid #5d4037; }
     .rarity-honed { color: #78909c; background: rgba(120, 144, 156, 0.15); border: 1px solid #455a64; }
@@ -301,6 +326,146 @@
     body.read-only .editable-cell {
       pointer-events: none;
     }
+
+    /* === 卡牌相簿模式 (Card Gallery View) 樣式 === */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 16px;
+      padding: 4px 0;
+    }
+
+    .item-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* 未解鎖：剪影 + 鎖頭 */
+    .item-card.locked {
+      opacity: 0.65;
+      background: #111827;
+      border-color: #1f2937;
+    }
+
+    .item-card.locked .card-img {
+      filter: brightness(0) drop-shadow(0 0 2px rgba(255, 255, 255, 0.15));
+    }
+
+    .lock-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px;
+      pointer-events: none;
+      z-index: 5;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+    }
+
+    .card-img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      border-radius: 8px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .card-img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      transition: filter 0.3s ease;
+    }
+
+    /* 稀有度與解鎖狀態視覺特效 */
+    .item-card.unlocked.is-imperial {
+      border-color: #f59e0b;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+      animation: imperialGlow 2.5s infinite alternate;
+    }
+    @keyframes imperialGlow {
+      0% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
+      100% { box-shadow: 0 0 22px rgba(245, 158, 11, 0.8); }
+    }
+
+    .item-card.unlocked.is-void {
+      border-color: #8a2be2;
+      background: radial-gradient(circle, #240a34 0%, #1e293b 100%);
+      box-shadow: 0 0 14px rgba(138, 43, 226, 0.6);
+      animation: voidPulse 2s infinite alternate;
+    }
+    @keyframes voidPulse {
+      0% { box-shadow: 0 0 8px rgba(138, 43, 226, 0.4); }
+      100% { box-shadow: 0 0 20px rgba(120, 0, 255, 0.8); }
+    }
+
+    .item-card.unlocked.is-astral {
+      border-color: #00f0ff;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+    }
+
+    .item-card.unlocked.is-divine {
+      border-color: #ffd700;
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    }
+
+    .card-id {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      align-self: flex-start;
+      font-weight: 700;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 2px 0;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-badges {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 6px;
+    }
+
+    .card-badge-item {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      background: #334155;
+      color: #94a3b8;
+    }
+
+    .card-badge-item.active-astral { background: rgba(99, 102, 241, 0.25); color: #818cf8; border: 1px solid #6366f1; }
+    .card-badge-item.active-divine { background: rgba(234, 179, 8, 0.25); color: #fde047; border: 1px solid #eab308; }
+    .card-badge-item.active-void { background: rgba(168, 85, 247, 0.25); color: #c084fc; border: 1px solid #a855f7; }
   </style>
 </head>
 <body class="read-only">
@@ -336,6 +501,12 @@
 
   <div class="toolbar">
     <input type="text" id="search-input" class="search-input" placeholder="搜尋物品名稱或編號 (登入後雙擊名稱/圖片/稀有度可編輯)...">
+    
+    <div class="view-toggle-container">
+      <button id="btn-view-table" class="view-btn active">📊 表格</button>
+      <button id="btn-view-card" class="view-btn">🎴 卡牌相簿</button>
+    </div>
+
     <div class="admin-only">
       <button id="export-csv-btn" class="btn btn-secondary">📥 匯出 CSV</button>
       <button id="export-json-btn" class="btn btn-secondary">💾 備份 JSON</button>
@@ -344,7 +515,8 @@
     </div>
   </div>
 
-  <div class="table-container">
+  <!-- 表格檢視區域 -->
+  <div id="table-view-container" class="table-container">
     <table>
       <thead>
         <tr>
@@ -361,6 +533,10 @@
       <tbody id="table-body">
       </tbody>
     </table>
+  </div>
+
+  <!-- 卡牌檢視區域 -->
+  <div id="card-view-container" class="card-grid" style="display: none;">
   </div>
 
   <script type="module">
@@ -406,6 +582,7 @@
 
     const TOTAL_ITEMS = 188;
     let itemsData = {};
+    let currentViewMode = 'table'; // 'table' 或 'card'
 
     for (let i = 1; i <= TOTAL_ITEMS; i++) {
       const preset = defaultDatabase[i] || {};
@@ -422,15 +599,20 @@
     }
 
     const tbody = document.getElementById("table-body");
+    const cardContainer = document.getElementById("card-view-container");
+    const tableViewContainer = document.getElementById("table-view-container");
     const authBtn = document.getElementById("auth-btn");
     const authStatus = document.getElementById("auth-status");
     const searchInput = document.getElementById("search-input");
     const importBtn = document.getElementById("import-btn");
     const importFileInput = document.getElementById("import-file-input");
+    const btnViewTable = document.getElementById("btn-view-table");
+    const btnViewCard = document.getElementById("btn-view-card");
 
     function render() {
       const query = searchInput.value.toLowerCase().trim();
       tbody.innerHTML = "";
+      cardContainer.innerHTML = "";
 
       let astralCountSum = 0;
       let astralCollected = 0;
@@ -451,7 +633,9 @@
         if (!matchSearch) return;
 
         const rarityClass = item.rarity ? `rarity-${item.rarity.toLowerCase()}` : 'rarity-common';
+        const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
 
+        // 1. 渲染表格模式列
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><strong>#${item.id}</strong></td>
@@ -482,6 +666,33 @@
           </td>
         `;
         tbody.appendChild(tr);
+
+        // 2. 渲染卡牌相簿模式
+        let specialFxClass = '';
+        if (isUnlocked) {
+          if (item.rarity && item.rarity.toLowerCase() === 'imperial') specialFxClass = 'is-imperial';
+          else if (item.void) specialFxClass = 'is-void';
+          else if (item.astral) specialFxClass = 'is-astral';
+          else if (item.divine) specialFxClass = 'is-divine';
+        }
+
+        const card = document.createElement("div");
+        card.className = `item-card ${isUnlocked ? 'unlocked' : 'locked'} ${specialFxClass}`;
+        card.innerHTML = `
+          <div class="card-id">#${item.id}</div>
+          <div class="card-img-wrapper">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" class="card-img" alt="${item.name}">` : `<span class="img-placeholder">+圖片</span>`}
+            ${!isUnlocked ? '<div class="lock-icon">🔒</div>' : ''}
+          </div>
+          <div class="card-title" title="${item.name}">${item.name}</div>
+          <span class="rarity-tag ${rarityClass}" style="margin-top: 4px; font-size: 0.7rem; padding: 2px 6px;">${item.rarity}</span>
+          <div class="card-badges">
+            <span class="card-badge-item ${item.astral ? 'active-astral' : ''}">A: ${item.astralCount || 0}</span>
+            <span class="card-badge-item ${item.divine ? 'active-divine' : ''}">D</span>
+            <span class="card-badge-item ${item.void ? 'active-void' : ''}">V</span>
+          </div>
+        `;
+        cardContainer.appendChild(card);
       });
 
       document.getElementById("stat-astral").innerText = `${astralCollected} / ${TOTAL_ITEMS} (${((astralCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
@@ -489,6 +700,23 @@
       document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${((voidCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
       document.getElementById("stat-count-total").innerText = astralCountSum;
     }
+
+    // 檢視模式切換
+    btnViewTable.onclick = () => {
+      currentViewMode = 'table';
+      btnViewTable.classList.add("active");
+      btnViewCard.classList.remove("active");
+      tableViewContainer.style.display = "block";
+      cardContainer.style.display = "none";
+    };
+
+    btnViewCard.onclick = () => {
+      currentViewMode = 'card';
+      btnViewCard.classList.add("active");
+      btnViewTable.classList.remove("active");
+      tableViewContainer.style.display = "none";
+      cardContainer.style.display = "grid";
+    };
 
     window.editField = async (key, field) => {
       if (!auth.currentUser) return;
@@ -621,7 +849,7 @@
         } catch (err) {
           alert("匯入失敗：無法解析該 JSON 檔案！");
         }
-        importFileInput.value = ''; // 清空選項
+        importFileInput.value = '';
       };
       reader.readAsText(file);
     };
