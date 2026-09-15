@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roblox Throw a Coin — Collection Index Tracker</title>
-}
   <style>
     :root {
       --bg-color: #0f172a;
@@ -41,11 +40,43 @@
     }
 
     /* =========================================================
-       ✨ 華麗頂部標題動畫特效 (Glorious Header Effects)
+       ✨ 華麗頂部標題與大頭貼動畫特效 (Glorious Header Effects)
     ========================================================= */
-    .title-group h1 {
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, #818cf8, #c084fc, #f43f5e, #38bdf8);
+      background-size: 200% 200%;
+      animation: avatarGlow 4s ease infinite;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: var(--card-bg);
+      display: block;
+    }
+
+    @keyframes avatarGlow {
+      0% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(129, 140, 248, 0.5); }
+      50% { background-position: 100% 50%; box-shadow: 0 0 20px rgba(244, 63, 94, 0.8); }
+      100% { background-position: 0% 50%; box-shadow: 0 0 10px rgba(129, 140, 248, 0.5); }
+    }
+
+    .main-title {
       margin: 0;
-      font-size: 1.75rem;
+      font-size: 1.85rem;
       font-weight: 800;
       letter-spacing: -0.01em;
       
@@ -66,6 +97,16 @@
       display: inline-block;
     }
 
+    .sub-title {
+      margin: 4px 0 0 0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #38bdf8;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+      animation: subTitlePulse 3s ease-in-out infinite alternate;
+    }
+
     @keyframes titleGradientFlow {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -82,6 +123,11 @@
                 drop-shadow(0 0 25px rgba(56, 189, 248, 0.6))
                 drop-shadow(0 0 35px rgba(253, 224, 71, 0.4));
       }
+    }
+
+    @keyframes subTitlePulse {
+      0% { opacity: 0.8; filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.4)); }
+      100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.9)); }
     }
 
     .auth-box {
@@ -933,252 +979,12 @@
         cardContainer.appendChild(card);
       });
 
-      document.getElementById("stat-astral").innerText = `${astralCollected} / ${TOTAL_ITEMS} (${((astralCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
-      document.getElementById("stat-divine").innerText = `${divineCollected} / ${TOTAL_ITEMS} (${((divineCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
-      document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${((voidCollected/TOTAL_ITEMS)*100).toFixed(1)}%)`;
+      // 更新統計儀表板
+      document.getElementById("stat-astral").innerText = `${astralCollected} / ${TOTAL_ITEMS} (${Math.round((astralCollected / TOTAL_ITEMS) * 100)}%)`;
+      document.getElementById("stat-divine").innerText = `${divineCollected} / ${TOTAL_ITEMS} (${Math.round((divineCollected / TOTAL_ITEMS) * 100)}%)`;
+      document.getElementById("stat-void").innerText = `${voidCollected} / ${TOTAL_ITEMS} (${Math.round((voidCollected / TOTAL_ITEMS) * 100)}%)`;
       document.getElementById("stat-count-total").innerText = astralCountSum;
-
-      updateTradingText();
     }
-
-    // 生成專屬 Discord 交易格式
-    function updateTradingText() {
-      let lfList = [];
-      let haveList = [];
-
-      const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
-
-      sortedKeys.forEach(key => {
-        const item = itemsData[key];
-        const isUnlocked = item.astral || item.divine || item.void || (item.astralCount > 0);
-
-        // LF (未收集)
-        if (!isUnlocked) {
-          lfList.push(`Astral/Divine/Void "${item.name}"`);
-        }
-
-        // I have (多餘數量)
-        if (item.astralCount > 1) {
-          const extraCount = item.astralCount - 1;
-          haveList.push(`Astral "${item.name}" x${extraCount}`);
-        }
-      });
-
-      let tradeStr = `LF\n`;
-      tradeStr += lfList.length > 0 ? lfList.join('\n') : 'None';
-      tradeStr += `\n\nI have \n`;
-      tradeStr += haveList.length > 0 ? haveList.join('\n') : 'None';
-      tradeStr += `\n\nNo tradeback\nDM`;
-
-      tradeTextOutput.value = tradeStr;
-    }
-
-    // Modal 控制邏輯
-    tradeBtn.onclick = () => {
-      if (!auth.currentUser) return;
-      updateTradingText();
-      tradeOverlay.classList.add("active");
-    };
-
-    closeModalBtn.onclick = () => {
-      tradeOverlay.classList.remove("active");
-    };
-
-    tradeOverlay.onclick = (e) => {
-      if (e.target === tradeOverlay) tradeOverlay.classList.remove("active");
-    };
-
-    copyTradeBtn.onclick = () => {
-      tradeTextOutput.select();
-      navigator.clipboard.writeText(tradeTextOutput.value).then(() => {
-        const originalText = copyTradeBtn.innerText;
-        copyTradeBtn.innerText = "✓ 已成功複製！";
-        setTimeout(() => { copyTradeBtn.innerText = originalText; }, 2000);
-      });
-    };
-
-    // 視圖切換
-    btnViewTable.onclick = () => {
-      btnViewTable.classList.add("active");
-      btnViewCard.classList.remove("active");
-      tableViewContainer.style.display = "block";
-      cardContainer.style.display = "none";
-    };
-
-    btnViewCard.onclick = () => {
-      btnViewCard.classList.add("active");
-      btnViewTable.classList.remove("active");
-      tableViewContainer.style.display = "none";
-      cardContainer.style.display = "grid";
-    };
-
-    window.editField = async (key, field) => {
-      if (!auth.currentUser) return;
-      let labelMap = { name: '物品名稱', imageUrl: '圖片網址 (URL)', rarity: '稀有度' };
-      const currentVal = itemsData[key][field] || '';
-      const newVal = prompt(`請輸入新的 ${labelMap[field]}（編號 #${itemsData[key].id}）：`, currentVal);
-      if (newVal !== null) {
-        itemsData[key][field] = newVal.trim();
-        render();
-        await syncToCloud();
-      }
-    };
-
-    window.toggleStatus = async (key, type) => {
-      if (!auth.currentUser) return;
-      itemsData[key][type] = !itemsData[key][type];
-      render();
-      await syncToCloud();
-    };
-
-    window.adjustCount = async (e, key, delta) => {
-      e.stopPropagation();
-      if (!auth.currentUser) return;
-      const current = itemsData[key].astralCount || 0;
-      itemsData[key].astralCount = Math.max(0, current + delta);
-      render();
-      await syncToCloud();
-    };
-
-    window.editCountDirect = async (key) => {
-      if (!auth.currentUser) return;
-      const current = itemsData[key].astralCount || 0;
-      const input = prompt(`請輸入 ${itemsData[key].name} 的 Astral 數量：`, current);
-      if (input !== null && !isNaN(input)) {
-        itemsData[key].astralCount = Math.max(0, parseInt(input, 10));
-        render();
-        await syncToCloud();
-      }
-    };
-
-    async function syncToCloud() {
-      try {
-        await setDoc(doc(db, "tracker", "progress"), { items: itemsData }, { merge: true });
-      } catch (e) {
-        console.error("同步失敗：", e);
-      }
-    }
-
-    onSnapshot(doc(db, "tracker", "progress"), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data.items) {
-          Object.keys(data.items).forEach(key => {
-            if (itemsData[key]) {
-              itemsData[key] = { ...itemsData[key], ...data.items[key] };
-            }
-          });
-          render();
-        }
-      }
-    });
-
-    // 匯出 CSV
-    document.getElementById("export-csv-btn").onclick = () => {
-      if (!auth.currentUser) return;
-      let csvContent = "\uFEFF編號,物品名稱,稀有度,Astral,Astral數量,Divine,Void,圖片網址\n";
-      const sortedKeys = Object.keys(itemsData).sort((a, b) => itemsData[a].id - itemsData[b].id);
-      
-      sortedKeys.forEach(key => {
-        const item = itemsData[key];
-        const row = [
-          item.id,
-          `"${item.name.replace(/"/g, '""')}"`,
-          `"${item.rarity}"`,
-          item.astral ? "已收集" : "未收集",
-          item.astralCount || 0,
-          item.divine ? "已收集" : "未收集",
-          item.void ? "已收集" : "未收集",
-          `"${item.imageUrl || ''}"`
-        ];
-        csvContent += row.join(",") + "\n";
-      });
-
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `TAC_Collection_Backup_${new Date().toISOString().slice(0,10)}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    };
-
-    // 匯出 JSON
-    document.getElementById("export-json-btn").onclick = () => {
-      if (!auth.currentUser) return;
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(itemsData, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `TAC_Collection_Data_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    };
-
-    // 匯入 JSON 備份檔案
-    importBtn.onclick = () => {
-      if (!auth.currentUser) return;
-      importFileInput.click();
-    };
-
-    importFileInput.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        try {
-          const importedData = JSON.parse(event.target.result);
-          if (typeof importedData === 'object' && importedData !== null) {
-            if (confirm("警告：匯入新資料將會覆蓋當前雲端資料庫的設定，確定要匯入嗎？")) {
-              itemsData = { ...itemsData, ...importedData };
-              render();
-              await syncToCloud();
-              alert("資料匯入成功並已同步至雲端！");
-            }
-          } else {
-            alert("匯入失敗：格式不符合 JSON 資料架構！");
-          }
-        } catch (err) {
-          alert("匯入失敗：無法解析該 JSON 檔案！");
-        }
-        importFileInput.value = '';
-      };
-      reader.readAsText(file);
-    };
-
-    searchInput.addEventListener("input", render);
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.body.classList.remove("read-only");
-        authStatus.innerText = `管理者已登入 (${user.email})`;
-        authBtn.innerText = "登出";
-        authBtn.classList.add("btn-danger");
-      } else {
-        document.body.classList.add("read-only");
-        authStatus.innerText = "當前狀態：瀏覽模式 (唯讀)";
-        authBtn.innerText = "管理員登入";
-        authBtn.classList.remove("btn-danger");
-      }
-    });
-
-    authBtn.onclick = async () => {
-      if (auth.currentUser) {
-        await signOut(auth);
-      } else {
-        const email = prompt("請輸入管理者 Email：");
-        const password = prompt("請輸入密碼：");
-        if (email && password) {
-          try {
-            await signInWithEmailAndPassword(auth, email, password);
-          } catch (err) {
-            alert("登入失敗：帳號或密碼錯誤！");
-          }
-        }
-      }
-    };
 
     render();
   </script>
