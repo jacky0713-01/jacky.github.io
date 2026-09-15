@@ -154,6 +154,10 @@
       font-weight: 600;
       font-size: 0.875rem;
       transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .btn:hover { background-color: var(--accent-hover); }
@@ -165,6 +169,16 @@
     .btn-danger:hover { background-color: #dc2626; }
     .btn-success { background-color: #10b981; color: #fff; }
     .btn-success:hover { background-color: #059669; }
+
+    /* Roblox 按鈕特別樣式 */
+    .btn-roblox {
+      background: linear-gradient(135deg, #00a2ff, #0066ff);
+      color: #fff;
+    }
+    .btn-roblox:hover {
+      background: linear-gradient(135deg, #0088cc, #0044cc);
+      box-shadow: 0 0 12px rgba(0, 162, 255, 0.5);
+    }
 
     .dashboard {
       display: grid;
@@ -709,10 +723,34 @@
       <h1>新竹九降風清水疾風俠 Roblox Throw a Coin — Collection Index Tracker</h1>
     </div>
     <div class="auth-box">
+      <!-- 🎮 Roblox 聯絡方式：點擊跳轉個人主頁 (請替換為你的 Roblox User ID) -->
+      <a href="https://www.roblox.com/users/123456789/profile" target="_blank" rel="noopener noreferrer" class="btn btn-roblox" title="前往我的 Roblox 個人主頁">
+        🎮 Roblox
+      </a>
+      
+      <!-- 📋 點擊快速複製 Username (請將 YourUsername 替換為你的帳號) -->
+      <button class="btn btn-secondary" onclick="copyRobloxID()" title="點擊複製 Roblox 帳號">
+        📋 複製 ID
+      </button>
+
       <!-- 🤝 交易助手設為 admin-only，管理員登入後才顯示 -->
-      <button id="trade-btn" class="btn btn-success admin-only" style="margin-right: 8px;">🤝 交易助手</button>
+      <button id="trade-btn" class="btn btn-success admin-only">🤝 交易助手</button>
       <span id="auth-status" class="auth-status">當前狀態：瀏覽模式 (唯讀)</span>
       <button id="auth-btn" class="btn">管理員登入</button>
+    </div>
+  </header>
+
+  <script>
+    function copyRobloxID() {
+      // 請在此處填寫你的 Roblox 帳號名稱 (Username)
+      const robloxUsername = "YourUsername"; 
+      navigator.clipboard.writeText(robloxUsername).then(() => {
+        alert("已複製 Roblox 帳號：" + robloxUsername);
+      }).catch(err => {
+        console.error("複製失敗：", err);
+      });
+    }
+  </script>
     </div>
   </header>
 
